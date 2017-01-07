@@ -1,0 +1,60 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title th:text="${s.sessionName}">Ooops, page not found</title>
+    <link rel="shortcut icon" th:href="@{/images/favicon.ico}" href="../../static/images/favicon.ico"/>
+    <link rel="stylesheet" th:href="@{/css/style.css}" href="../../static/css/style.css"/>
+</head>
+<body>
+<section>
+    <h2><span th:text="${s.sessionName}">キーノート</span> <span th:text="${s.speakerDisplayNames}">スピーカー</span></h2>
+</section>
+<section>
+    <a th:href="@{/sessions/{sessionId}(sessionId=${s.sessionId})}">アンケートフォーム</a>
+    <h3><span th:text="${s.sessionName}">キーノート</span>の感想</h3>
+    <div>
+        <h4>満足度はどうだったでしょうか？</h4>
+        <div id="satisfactionsChart" style="height: 400px;"></div>
+        <h4>難易度は良かったでしょうか？</h4>
+        <div id="difficultiesChart" style="height: 400px;"></div>
+        <h4>何かご意見があれば教えてください</h4>
+        <ul>
+            <li th:each="comment : ${comments}" th:text="${comment}"></li>
+        </ul>
+    </div>
+    <div sec:authorize="hasRole('ADMIN')">
+        <h3>イベント全体の感想</h3>
+        <ul>
+            <li><a th:href="@{/admin/seminars/{seminarId}/result(seminarId=${s.seminar.seminarId})}"
+                   th:text="${s.seminar.seminarName +' (' + #temporals.format(s.seminar.seminarDate, 'yyyy/MM/dd') + ')'}"
+                   href="seminar.html"></a></li>
+        </ul>
+    </div>
+    <hr/>
+    <a th:href="@{/}" href="../index.html">🏠 JJUGアンケート</a>
+</section>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript" th:inline="javascript">
+    google.charts.load('current', {'packages': ['corechart']});
+    google.charts.setOnLoadCallback(drawChart);
+    function drawChart() {
+        var satisfactionsArray = JSON.parse(/*[[${satisfactionsArray}]]*/ '[["Task", "Hours per Day"],["Work", 11],["Eat", 2],["Commute", 2],["Watch TV", 2],["Sleep", 7]]');
+        var satisfactionsData = google.visualization.arrayToDataTable(satisfactionsArray);
+        var satisfactionsChart = new google.visualization.PieChart(document.getElementById('satisfactionsChart'));
+        satisfactionsChart.draw(satisfactionsData, {
+            title: '満足度'
+        });
+
+        var difficultiesArray = JSON.parse(/*[[${difficultiesArray}]]*/ '[["Task", "Hours per Day"],["Work", 11],["Eat", 2],["Commute", 2],["Watch TV", 2],["Sleep", 7]]');
+        var difficultiesData = google.visualization.arrayToDataTable(difficultiesArray);
+        var difficultiesChart = new google.visualization.PieChart(document.getElementById('difficultiesChart'));
+        difficultiesChart.draw(difficultiesData, {
+            title: '難易度'
+        });
+    }
+</script>
+</body>
+</html>

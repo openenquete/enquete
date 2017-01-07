@@ -1,0 +1,9 @@
+applications:
+- name: questionnaires
+  buildpack: java_buildpack_offline
+  memory: 1g
+  path: target/questionnaires-0.0.1-SNAPSHOT.jar
+  services:
+  - questionnaires-db # cf create-service p-mysql 100mb-dev questionnaires-db
+  domains:
+  - cfapps.pez.pivotal.io

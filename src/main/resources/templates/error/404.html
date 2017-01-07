@@ -1,0 +1,23 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>JJUGアンケート</title>
+    <link rel="shortcut icon" th:href="@{/images/favicon.ico}" href="../../static/images/favicon.ico"/>
+    <link rel="stylesheet" th:href="@{/css/style.css}" href="../../static/css/style.css"/>
+</head>
+<body>
+<section>
+    <h1>JJUGアンケート</h1>
+</section>
+<section>
+    <h3>ページが見つかりません</h3>
+    <div sec:authorize="authenticated">
+        <hr/>
+        <a th:href="@{/}" href="../index.html">🏠 JJUGアンケート</a>
+    </div>
+</section>
+</body>
+</html>

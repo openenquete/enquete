@@ -1,0 +1,202 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title th:text="${seminar.seminarName}">Ooops, page not found</title>
+    <link rel="shortcut icon" th:href="@{/images/favicon.ico}" href="../static/images/favicon.ico"/>
+    <link rel="stylesheet" th:href="@{/css/style.css}" href="../static/css/style.css"/>
+</head>
+<body>
+<section>
+    <h2 th:text="${seminar.seminarName +' (' + #temporals.format(seminar.seminarDate, 'yyyy/MM/dd') + ')'}">JJUG CCC
+        2016 Fall</h2>
+    <p sec:authorize="authenticated">
+        <span sec:authentication="principal.name">duke</span>さんログイン中。
+    </p>
+    <p sec:authorize="anonymous">
+        <a href="index.html" th:href="@{/}">GitHubでログイン</a>
+    </p>
+</section>
+<section sec:authorize="hasRole('ADMIN')">
+    <h3>管理者用</h3>
+    <div th:unless="${seminar.seminarClosed}">
+        <form id="closeForm" onsubmit="return closeSeminar(event);">
+            <input type="hidden" name="seminarId" th:value="${seminarId}"/>
+            <input type="submit" name="submit" value="Close"/>
+        </form>
+    </div>
+    <div th:if="${seminar.seminarClosed}">
+        <form id="reopenForm" onsubmit="return reopenSeminar(event);">
+            <input type="hidden" name="closedId" th:value="${seminar.seminarClosed.closedId}"/>
+            <input type="submit" name="submit" value="Reopen"/>
+        </form>
+    </div>
+    <a href="admin/seminar.html" th:href="@{/admin/seminars/{seminarId}/result(seminarId=${seminar.seminarId})}">結果</a>
+</section>
+<section>
+    <div>
+        <form onsubmit="return send(event);">
+            <h3>イベント全体の感想</h3>
+            <div th:unless="${seminar.seminarClosed}" id="form"
+                 th:style="${'display: ' + (submitted ?'none' : 'block')}">
+                <h4>満足度はどうだったでしょうか？</h4>
+                <table>
+                    <tr>
+                        <!--/*/ <th:block th:each="satisfaction : ${T(jjug.questionnaire.enums.Satisfaction).values()}"> /*/-->
+                        <th><label th:for="${#strings.toLowerCase(satisfaction)}"
+                                   th:text="#{'satisfaction.' + ${#strings.toLowerCase(satisfaction)}}">aaa</label></th>
+                        <!--/*/ </th:block> /*/-->
+                    </tr>
+                    <tr>
+                        <!--/*/ <th:block th:each="satisfaction : ${T(jjug.questionnaire.enums.Satisfaction).values()}"> /*/-->
+                        <td><input type="radio" name="satisfaction" th:id="${#strings.toLowerCase(satisfaction)}"
+                                   th:value="${satisfaction}" required="required"/></td>
+                        <!--/*/ </th:block> /*/-->
+                    </tr>
+                </table>
+                <h4>次回、期待するコンテンツを教えてください</h4>
+                <textarea name="request"></textarea>
+                <h4>全体で何かご意見があれば教えてください</h4>
+                <textarea name="comment"></textarea>
+                <hr/>
+                <input type="hidden" name="seminarId" th:value="${seminarId}"/>
+                <input type="submit" name="submit" value="Send"/>
+            </div>
+            <div id="closed" th:if="${seminar.seminarClosed}">
+                受付終了しました。
+            </div>
+            <div id="thanks" th:style="${'display: ' + (submitted ?'block' : 'none')}">
+                回答ありがとうございました。<br/>
+                <img src="../static/images/thanks.png" th:src="@{/images/thanks.png}"/>
+            </div>
+        </form>
+        <h3>セッション毎の感想</h3>
+        <ul>
+            <li th:each="session : ${seminar.sessions}"><a
+                    th:href="@{/sessions/{sessionId}(sessionId=${session.sessionId})}"
+                    href="session.html"><span th:text="${session.sessionName}">キーノート</span> <span
+                    th:text="${session.speakerDisplayNames}">スピーカー</span></a></li>
+        </ul>
+    </div>
+    <div sec:authorize="authenticated">
+        <hr/>
+        <a th:href="@{/}" href="index.html">🏠 JJUGアンケート</a>
+    </div>
+    <script src="../static/js/axios.min.js" th:src="@{/js/axios.min.js}"></script>
+    <script src="../static/js/utils.js" th:src="@{/js/utils.js}"></script>
+    <script>
+        function send(event) {
+            event.preventDefault();
+            var form = event.target,
+                request = {
+                    satisfaction: checkedValue(form.satisfaction),
+                    request: form.request.value,
+                    comment: form.comment.value,
+                    seminar: {
+                        seminarId: form.seminarId.value
+                    }
+                },
+                submit = form.submit,
+                message = submit.value,
+                reset = function () {
+                    forEach(form.querySelectorAll('input,textarea'),
+                        function (x) {
+                            x.disabled = false;
+                        });
+                    submit.disabled = false;
+                    submit.value = message;
+                };
+
+            forEach(form.querySelectorAll('input,textarea'),
+                function (x) {
+                    x.disabled = true;
+                });
+            submit.value = 'Sending ...';
+            axios.post('/v1/responses_for_seminar', request)
+                .then(function (res) {
+                    document.getElementById('form').style.display = 'none';
+                    document.getElementById('thanks').style.display = 'block';
+                    form.reset();
+                    reset();
+                })
+                .catch(function (e) {
+                    console.error(e);
+                    alert(JSON.stringify(e.response.data));
+                    reset();
+                });
+            return false;
+        }
+
+        function closeSeminar(event) {
+            event.preventDefault();
+            var form = event.target,
+                request = {
+                    seminar: {
+                        seminarId: form.seminarId.value
+                    }
+                },
+                submit = form.submit,
+                message = submit.value,
+                reset = function () {
+                    forEach(form.querySelectorAll('input,textarea'),
+                        function (x) {
+                            x.disabled = false;
+                        });
+                    submit.disabled = false;
+                    submit.value = message;
+                };
+
+            forEach(form.querySelectorAll('input,textarea'),
+                function (x) {
+                    x.disabled = true;
+                });
+            submit.value = 'Closing ...';
+            axios.post('/v1/seminar_closed', request)
+                .then(function (res) {
+                    window.location.reload();
+                })
+                .catch(function (e) {
+                    console.error(e);
+                    alert(JSON.stringify(e.response.data));
+                    reset();
+                });
+            return false;
+        }
+
+        function reopenSeminar(event) {
+            event.preventDefault();
+            var form = event.target,
+                closedId = form.closedId.value,
+                submit = form.submit,
+                message = submit.value,
+                reset = function () {
+                    forEach(form.querySelectorAll('input,textarea'),
+                        function (x) {
+                            x.disabled = false;
+                        });
+                    submit.disabled = false;
+                    submit.value = message;
+                };
+
+            forEach(form.querySelectorAll('input,textarea'),
+                function (x) {
+                    x.disabled = true;
+                });
+            submit.value = 'Reopening ...';
+            axios.delete('/v1/seminar_closed/' + closedId)
+                .then(function (res) {
+                    window.location.reload();
+                })
+                .catch(function (e) {
+                    console.error(e);
+                    alert(JSON.stringify(e.response.data));
+                    reset();
+                });
+            return false;
+        }
+    </script>
+</section>
+</body>
+</html>

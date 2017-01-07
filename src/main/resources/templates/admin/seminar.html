@@ -1,0 +1,55 @@
+<html xmlns:th="http://www.thymeleaf.org"
+>
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title th:text="${seminar.seminarName}">Ooops, page not found</title>
+    <link rel="shortcut icon" th:href="@{/images/favicon.ico}" href="../../static/images/favicon.ico"/>
+    <link rel="stylesheet" th:href="@{/css/style.css}" href="../../static/css/style.css"/>
+</head>
+<body>
+<section>
+    <h2 th:text="${seminar.seminarName +' (' + #temporals.format(seminar.seminarDate, 'yyyy/MM/dd') + ')'}">JJUG CCC
+        2016 Fall</h2>
+</section>
+<section>
+    <a th:href="@{/seminars/{seminarId}(seminarId=${seminar.seminarId})}">アンケートフォーム</a>
+    <h3>イベント全体の感想</h3>
+    <div>
+        <h4>満足度はどうだったでしょうか？</h4>
+        <div id="satisfactionsChart" style="height: 400px;"></div>
+        <h4>次回、期待するコンテンツを教えてください</h4>
+        <ul>
+            <li th:each="request : ${requests}" th:text="${request}"></li>
+        </ul>
+        <h4>全体で何かご意見があれば教えてください</h4>
+        <ul>
+            <li th:each="comment : ${comments}" th:text="${comment}"></li>
+        </ul>
+    </div>
+    <h3>セッション毎の感想</h3>
+    <ul>
+        <li th:each="session : ${seminar.sessions}"><a
+                th:href="@{/admin/sessions/{sessionId}/result(sessionId=${session.sessionId})}"
+                href="session.html"><span th:text="${session.sessionName}">キーノート</span> <span
+                th:text="${session.speakerDisplayNames}">スピーカー</span></a></li>
+    </ul>
+    <hr/>
+    <a th:href="@{/}" href="../index.html">🏠 JJUGアンケート</a>
+</section>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript" th:inline="javascript">
+    google.charts.load('current', {'packages': ['corechart']});
+    google.charts.setOnLoadCallback(drawChart);
+    function drawChart() {
+        var satisfactionsArray = JSON.parse(/*[[${satisfactionsArray}]]*/ '[["Task", "Hours per Day"],["Work", 11],["Eat", 2],["Commute", 2],["Watch TV", 2],["Sleep", 7]]');
+        var satisfactionsData = google.visualization.arrayToDataTable(satisfactionsArray);
+        var satisfactionsChart = new google.visualization.PieChart(document.getElementById('satisfactionsChart'));
+        satisfactionsChart.draw(satisfactionsData, {
+            title: '満足度'
+        });
+    }
+</script>
+</body>
+</html>

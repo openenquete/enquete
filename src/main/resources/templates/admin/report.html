@@ -35,6 +35,7 @@
                 <td th:text="${r.value.count}"></td>
             </tr>
         </table>
+        <div id="satisfactionsChart" th:style="${'height: '+(satisfactionReport.size() * 35)+'px;'}"></div>
 
         <h3>難易度</h3>
 
@@ -51,8 +52,36 @@
                 <td th:text="${r.value.count}"></td>
             </tr>
         </table>
-    </div>
 
+        <div id="difficultiesChart" th:style="${'height: '+(satisfactionReport.size() * 35)+'px;'}"></div>
+
+    </div>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript" th:inline="javascript">
+        google.charts.load('current', {'packages': ['corechart']});
+        google.charts.setOnLoadCallback(drawChart);
+        function drawChart() {
+            var satisfactionsArray = JSON.parse(/*[[${satisfactionsArray}]]*/ '[["Task", "Hours per Day", "aaa", "bbb"],["Work", 11, 13, 14],["Eat", 2, 8, 2],["Commute", 2, 1, 1],["Watch TV", 2, 3, 5],["Sleep", 7, 2, 9]]');
+            var satisfactionsData = google.visualization.arrayToDataTable(satisfactionsArray);
+            var satisfactionsChart = new google.visualization.BarChart(document.getElementById('satisfactionsChart'));
+            satisfactionsChart.draw(satisfactionsData, {
+                legend: {position: 'top', maxLines: 3},
+                bar: {groupWidth: '75%'},
+                isStacked: true,
+                title: '満足度'
+            });
+
+            var difficultiesArray = JSON.parse(/*[[${difficultiesArray}]]*/ '[["Task", "Hours per Day", "aaa", "bbb"],["Work", 11, 13, 14],["Eat", 2, 8, 2],["Commute", 2, 1, 1],["Watch TV", 2, 3, 5],["Sleep", 7, 2, 9]]');
+            var difficultiesData = google.visualization.arrayToDataTable(difficultiesArray);
+            var difficultiesChart = new google.visualization.BarChart(document.getElementById('difficultiesChart'));
+            difficultiesChart.draw(difficultiesData, {
+                legend: {position: 'top', maxLines: 3},
+                bar: {groupWidth: '75%'},
+                isStacked: true,
+                title: '難易度'
+            });
+        }
+    </script>
     <hr/>
     <a th:href="@{/}" href="../index.html">🏠 JJUGアンケート</a>
 </section>

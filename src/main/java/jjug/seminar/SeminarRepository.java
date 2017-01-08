@@ -13,7 +13,7 @@ import jjug.session.Session;
 public interface SeminarRepository extends Repository<Seminar, UUID> {
 	Optional<Seminar> findOne(UUID id);
 
-	Optional<Seminar> findBySessions(@Param("session") Session session);
+	Optional<Seminar> findBySessions(@Param("sessions") Session session);
 
 	Page<Seminar> findAll(Pageable pageable);
 

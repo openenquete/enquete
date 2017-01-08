@@ -20,4 +20,6 @@ public interface SeminarRepository extends Repository<Seminar, UUID> {
 	Page<Seminar> findBySeminarClosedIsNull(Pageable pageable);
 
 	Seminar save(Seminar seminar);
+
+	long count();
 }

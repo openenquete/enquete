@@ -48,6 +48,10 @@ public class QuestionnairesApplication {
 			ResponseForSessionRepository responseForSessionRepository,
 			TransactionTemplate tx) {
 		return a -> tx.execute(st -> {
+			if (seminarRepository.count() > 0) {
+				return null;
+			}
+			// Add test data if empty
 			List<Session> sessions = asList(
 					Session.builder().sessionName("キーノート")
 							.speakerDisplayNames(asList("Taro Yamada", "Ichiro Suzuki"))

@@ -28,11 +28,11 @@ public class ResponseForSession implements Serializable, UsernameHolder, IpAddre
 	@GeneratedValue(generator = "uuid")
 	@Column(columnDefinition = "binary(16)")
 	private UUID responseForSessionId;
-	@Enumerated(EnumType.STRING)
 	@NotNull
+	@Column(columnDefinition = "tinyint")
 	private Satisfaction satisfaction;
-	@Enumerated(EnumType.STRING)
 	@NotNull
+	@Column(columnDefinition = "tinyint")
 	private Difficulty difficulty;
 	private String comment;
 	@ManyToOne

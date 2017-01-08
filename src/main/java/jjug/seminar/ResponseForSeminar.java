@@ -27,8 +27,8 @@ public class ResponseForSeminar implements Serializable, UsernameHolder, IpAddre
 	@GeneratedValue(generator = "uuid")
 	@Column(columnDefinition = "binary(16)")
 	private UUID responseForSeminarId;
-	@Enumerated(EnumType.STRING)
 	@NotNull
+	@Column(columnDefinition = "tinyint")
 	private Satisfaction satisfaction;
 	private String request;
 	private String comment;

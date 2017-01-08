@@ -55,6 +55,10 @@
 
         <div id="difficultiesChart" th:style="${'height: '+(satisfactionReport.size() * 35)+'px;'}"></div>
 
+        <h3>満足度 vs. 難易度</h3>
+
+        <div id="correlationChart" style="height: 300px;"></div>
+
     </div>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript" th:inline="javascript">
@@ -79,6 +83,16 @@
                 bar: {groupWidth: '75%'},
                 isStacked: true,
                 title: '難易度'
+            });
+
+            var correlationArray = JSON.parse(/*[[${correlationData}]]*/ '[["Age", "Weight"], [ 4,      3], [ 4,      3.5], [ 1,     4], [ 4,      5], [ 3,      3.5], [ 1.5,    3]]');
+            var correlationData = google.visualization.arrayToDataTable(correlationArray);
+            var correlationChart = new google.visualization.ScatterChart(document.getElementById('correlationChart'));
+            correlationChart.draw(correlationData, {
+                title: '満足度 vs. 難易度',
+                hAxis: {title: '満足度', minValue: 1, maxValue: 5},
+                vAxis: {title: '難易度', minValue: 1, maxValue: 5},
+                legend: 'none'
             });
         }
     </script>

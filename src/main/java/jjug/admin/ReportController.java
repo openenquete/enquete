@@ -45,6 +45,8 @@ public class ReportController {
 				arrayJsonString(satisfactionReport, Satisfaction.class, locale));
 		model.addAttribute("difficultiesArray",
 				arrayJsonString(difficultyReport, Difficulty.class, locale));
+		model.addAttribute("correlationData", objectMapper.writeValueAsString(
+				correlationData(satisfactionReport, difficultyReport)));
 		return "admin/report";
 	}
 
@@ -87,6 +89,21 @@ public class ReportController {
 		Map<Object, Double> map = new LinkedHashMap<>();
 		Stream.of(clazz.getEnumConstants()).forEach(e -> map.put(e, 0.0));
 		return map;
+	}
+
+	List<Object[]> correlationData(
+			Map<Summary.Session, Summary.Report<Satisfaction>> satisfactionReport,
+			Map<Summary.Session, Summary.Report<Difficulty>> difficultyReport) {
+		List<Object[]> data = new ArrayList<>();
+		data.add(new String[] { "満足度", "難易度" });
+		satisfactionReport.forEach((session, satisfaction) -> {
+			Summary.Report<Difficulty> difficulty = difficultyReport.get(session);
+			if (difficulty != null) {
+				data.add(new Object[] { satisfaction.getAverage(),
+						difficulty.getAverage() });
+			}
+		});
+		return data;
 	}
 
 }

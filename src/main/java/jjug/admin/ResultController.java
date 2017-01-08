@@ -19,6 +19,7 @@ import jjug.questionnaire.enums.Difficulty;
 import jjug.questionnaire.enums.Satisfaction;
 import jjug.seminar.ResponseForSeminar;
 import jjug.seminar.ResponseForSeminarRepository;
+import jjug.seminar.Seminar;
 import jjug.seminar.SeminarRepository;
 import jjug.session.ResponseForSession;
 import jjug.session.ResponseForSessionRepository;
@@ -39,7 +40,7 @@ public class ResultController {
 			throws IOException {
 		List<ResponseForSeminar> responses = responseForSeminarRepository
 				.findBySeminar_SeminarId(seminarId);
-
+		Seminar seminar = seminarRepository.findOne(seminarId).get();
 		Map<String, Long> satisfactions = satisfactionMap(
 				responses.stream().collect(
 						groupingBy(ResponseForSeminar::getSatisfaction, counting())),
@@ -50,8 +51,7 @@ public class ResultController {
 		List<String> requests = responses.stream().map(ResponseForSeminar::getRequest)
 				.filter(s -> !s.isEmpty()).collect(toList());
 
-		responses.stream().map(ResponseForSeminar::getSeminar).findAny()
-				.ifPresent(seminar -> model.addAttribute("seminar", seminar));
+		model.addAttribute("seminar", seminar);
 		model.addAttribute("satisfactions", satisfactions);
 		model.addAttribute("satisfactionsArray",
 				arrayJsonString(satisfactions, "Satisfaction"));

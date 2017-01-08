@@ -10,6 +10,7 @@ import java.util.stream.Stream;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
@@ -75,7 +76,7 @@ public class ResultController {
 						groupingBy(ResponseForSession::getDifficulty, counting())),
 				locale);
 		List<String> comments = responses.stream().map(ResponseForSession::getComment)
-				.filter(s -> !s.isEmpty()).collect(toList());
+				.filter(s -> !StringUtils.isEmpty(s)).collect(toList());
 
 		responses.stream().map(ResponseForSession::getSession).findAny()
 				.ifPresent(session -> model.addAttribute("s", session));

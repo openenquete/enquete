@@ -46,7 +46,12 @@
     </section>
     <section>
         <h3>システムメトリクス</h3>
+        <h4>メモリ使用率</h4>
         <div id="metrics"></div>
+        <h4>HTTPセッション数</h4>
+        <p style="font-size: xx-large">
+            🏃 <span id="activeSession"></span>
+        </p>
     </section>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script src="../static/js/axios.min.js" th:src="@{/js/axios.min.js}"></script>
@@ -87,7 +92,8 @@
                     memFree = metrics['mem.free'],
                     heap = metrics['heap'],
                     heapUsed = metrics['heap.used'],
-                    heapCommited = metrics['heap.committed'];
+                    heapCommited = metrics['heap.committed'],
+                    activeSession = metrics['httpsessions.active'];
                 // Memory
                 data.setValue(0, 1, 100 * memFree / mem);
                 // Heap (Used)
@@ -95,6 +101,8 @@
                 // Heap (Commited)
                 data.setValue(2, 1, 100 * heapCommited / heap);
                 chart.draw(data, options);
+                // Active Session
+                document.getElementById('activeSession').innerText = activeSession;
             });
         }
     </script>

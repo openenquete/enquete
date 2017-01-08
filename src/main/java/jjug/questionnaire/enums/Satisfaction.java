@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum Satisfaction implements Comparator<Satisfaction> {
+public enum Satisfaction implements Comparator<Satisfaction>, Comparable<Satisfaction> {
 	EXCELLENT(5), GOOD(4), NOT_BAD(3), BAD(2), TERRIBLE(1);
 	private final int value;
 

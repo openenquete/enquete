@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum Difficulty implements Comparator<Difficulty> {
+public enum Difficulty implements Comparator<Difficulty>, Comparable<Difficulty> {
 	VERY_HARD(5), HARD(4), MODERATE(3), EASY(2), VERY_EASY(1);
 	private final int value;
 

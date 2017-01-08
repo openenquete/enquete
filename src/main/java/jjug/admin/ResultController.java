@@ -7,8 +7,6 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-import jjug.session.Session;
-import jjug.session.SessionRepository;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,6 +24,8 @@ import jjug.seminar.Seminar;
 import jjug.seminar.SeminarRepository;
 import jjug.session.ResponseForSession;
 import jjug.session.ResponseForSessionRepository;
+import jjug.session.Session;
+import jjug.session.SessionRepository;
 import lombok.RequiredArgsConstructor;
 
 @Controller
@@ -51,9 +51,9 @@ public class ResultController {
 				locale);
 
 		List<String> comments = responses.stream().map(ResponseForSeminar::getComment)
-				.filter(s -> !s.isEmpty()).collect(toList());
+				.filter(s -> !StringUtils.isEmpty(s)).collect(toList());
 		List<String> requests = responses.stream().map(ResponseForSeminar::getRequest)
-				.filter(s -> !s.isEmpty()).collect(toList());
+				.filter(s -> !StringUtils.isEmpty(s)).collect(toList());
 
 		model.addAttribute("seminar", seminar);
 		model.addAttribute("satisfactions", satisfactions);

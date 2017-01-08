@@ -1,0 +1,60 @@
+<html xmlns:th="http://www.thymeleaf.org"
+>
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title th:text="${seminar.seminarName}">Ooops, page not found</title>
+    <link rel="shortcut icon" th:href="@{/images/favicon.ico}" href="../../static/images/favicon.ico"/>
+    <link rel="stylesheet" th:href="@{/css/style.css}" href="../../static/css/style.css"/>
+</head>
+<body>
+<section>
+    <h2 th:text="${seminar.seminarName +' (' + #temporals.format(seminar.seminarDate, 'yyyy/MM/dd') + ')'}">JJUG CCC
+        2016 Fall</h2>
+</section>
+<section>
+    <ul>
+        <li><a th:href="@{/seminars/{seminarId}(seminarId=${seminar.seminarId})}">アンケートフォーム</a></li>
+        <li><a th:href="@{/admin/seminars/{seminarId}/result(seminarId=${seminar.seminarId})}">結果</a></li>
+    </ul>
+    <h2>セッション毎レポート</h2>
+    <div>
+        <h3>満足度</h3>
+
+        <table>
+            <tr>
+                <th>セッション名</th>
+                <th>平均満足度</th>
+                <th>回答数</th>
+            </tr>
+            <tr th:each="r : ${satisfactionReport}">
+                <td><a th:href="@{/admin/sessions/{sessionId}/result(sessionId=${r.key.sessionId})}"
+                       th:text="${r.key.sessionName}"></a></td>
+                <td th:text="${r.value.average}"></td>
+                <td th:text="${r.value.count}"></td>
+            </tr>
+        </table>
+
+        <h3>難易度</h3>
+
+        <table>
+            <tr>
+                <th>セッション名</th>
+                <th>平均満足度</th>
+                <th>回答数</th>
+            </tr>
+            <tr th:each="r : ${difficultyReport}">
+                <td><a th:href="@{/admin/sessions/{sessionId}/result(sessionId=${r.key.sessionId})}"
+                       th:text="${r.key.sessionName}"></a></td>
+                <td th:text="${r.value.average}"></td>
+                <td th:text="${r.value.count}"></td>
+            </tr>
+        </table>
+    </div>
+
+    <hr/>
+    <a th:href="@{/}" href="../index.html">🏠 JJUGアンケート</a>
+</section>
+</body>
+</html>

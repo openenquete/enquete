@@ -7,6 +7,8 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
+import jjug.session.Session;
+import jjug.session.SessionRepository;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,6 +33,7 @@ import lombok.RequiredArgsConstructor;
 public class ResultController {
 
 	private final SeminarRepository seminarRepository;
+	private final SessionRepository sessionRepository;
 	private final ResponseForSeminarRepository responseForSeminarRepository;
 	private final ResponseForSessionRepository responseForSessionRepository;
 	private final MessageSource messageSource;
@@ -66,7 +69,7 @@ public class ResultController {
 			throws IOException {
 		List<ResponseForSession> responses = responseForSessionRepository
 				.findBySession_SessionId(sessionId);
-
+		Session session = sessionRepository.findOne(sessionId).get();
 		Map<String, Long> satisfactions = satisfactionMap(
 				responses.stream().collect(
 						groupingBy(ResponseForSession::getSatisfaction, counting())),
@@ -78,8 +81,7 @@ public class ResultController {
 		List<String> comments = responses.stream().map(ResponseForSession::getComment)
 				.filter(s -> !StringUtils.isEmpty(s)).collect(toList());
 
-		responses.stream().map(ResponseForSession::getSession).findAny()
-				.ifPresent(session -> model.addAttribute("s", session));
+		model.addAttribute("s", session);
 		model.addAttribute("satisfactions", satisfactions);
 		model.addAttribute("satisfactionsArray",
 				arrayJsonString(satisfactions, "Satisfaction"));

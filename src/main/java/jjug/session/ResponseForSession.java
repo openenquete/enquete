@@ -37,6 +37,7 @@ public class ResponseForSession implements Serializable, UsernameHolder, IpAddre
 	private String comment;
 	@ManyToOne
 	@JoinColumn(name = "session_id", updatable = false)
+	@NotNull
 	private Session session;
 	@Setter
 	@Column(updatable = false)

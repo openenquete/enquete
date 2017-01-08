@@ -41,4 +41,9 @@ public class Seminar implements Serializable {
 	private Instant updatedAt;
 	@Column(insertable = false, updatable = false)
 	private Instant createdAt;
+
+	@Transient
+	public boolean isOpen() {
+		return this.seminarClosed == null;
+	}
 }

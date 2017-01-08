@@ -1,7 +1,5 @@
 package jjug.seminar;
 
-import java.util.Objects;
-
 import org.springframework.data.rest.core.annotation.HandleBeforeCreate;
 import org.springframework.data.rest.core.annotation.HandleBeforeSave;
 import org.springframework.data.rest.core.annotation.RepositoryEventHandler;
@@ -14,7 +12,7 @@ public class ResponseForSeminarHandler {
 	@HandleBeforeCreate
 	@HandleBeforeSave
 	public void check(ResponseForSeminar response) {
-		if (!Objects.isNull(response.getSeminar().getSeminarClosed())) {
+		if (!response.getSeminar().isOpen()) {
 			throw new IllegalStateException("The seminar has been closed.");
 		}
 	}

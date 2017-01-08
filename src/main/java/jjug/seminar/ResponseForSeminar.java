@@ -34,6 +34,7 @@ public class ResponseForSeminar implements Serializable, UsernameHolder, IpAddre
 	private String comment;
 	@ManyToOne
 	@JoinColumn(name = "seminar_id", updatable = false)
+	@NotNull
 	private Seminar seminar;
 	@Setter
 	@Column(updatable = false)

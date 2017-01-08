@@ -21,7 +21,7 @@
 <section>
     <form onsubmit="send(this);return false;">
         <h3><span th:text="${s.sessionName}">キーノート</span>の感想</h3>
-        <div th:unless="${s.seminar.seminarClosed}" id="form" th:style="${'display: ' + (submitted ?'none' : 'block')}">
+        <div th:if="${s.seminar.open}" id="form" th:style="${'display: ' + (submitted ?'none' : 'block')}">
             <h4>満足度はどうだったでしょうか？</h4>
             <table>
                 <tr>
@@ -58,7 +58,7 @@
             <input type="hidden" name="sessionId" th:value="${sessionId}"/>
             <input type="submit" name="submit" value="Send"/>
         </div>
-        <div th:if="${s.seminar.seminarClosed}">
+        <div th:unless="${s.seminar.open}">
             受付終了しました。
         </div>
         <div id="thanks" th:style="${'display: ' + (submitted ?'block' : 'none')}">

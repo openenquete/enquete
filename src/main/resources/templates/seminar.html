@@ -21,13 +21,13 @@
 </section>
 <section sec:authorize="hasRole('ADMIN')">
     <h3>管理者用</h3>
-    <div th:unless="${seminar.seminarClosed}">
+    <div th:if="${seminar.open}">
         <form id="closeForm" onsubmit="return closeSeminar(event);">
             <input type="hidden" name="seminarId" th:value="${seminarId}"/>
             <input type="submit" name="submit" value="Close"/>
         </form>
     </div>
-    <div th:if="${seminar.seminarClosed}">
+    <div th:unless="${seminar.open}">
         <form id="reopenForm" onsubmit="return reopenSeminar(event);">
             <input type="hidden" name="closedId" th:value="${seminar.seminarClosed.closedId}"/>
             <input type="submit" name="submit" value="Reopen"/>
@@ -39,7 +39,7 @@
     <div>
         <form onsubmit="return send(event);">
             <h3>イベント全体の感想</h3>
-            <div th:unless="${seminar.seminarClosed}" id="form"
+            <div th:if="${seminar.open}" id="form"
                  th:style="${'display: ' + (submitted ?'none' : 'block')}">
                 <h4>満足度はどうだったでしょうか？</h4>
                 <table>
@@ -64,7 +64,7 @@
                 <input type="hidden" name="seminarId" th:value="${seminarId}"/>
                 <input type="submit" name="submit" value="Send"/>
             </div>
-            <div id="closed" th:if="${seminar.seminarClosed}">
+            <div id="closed" th:unless="${seminar.open}">
                 受付終了しました。
             </div>
             <div id="thanks" th:style="${'display: ' + (submitted ?'block' : 'none')}">

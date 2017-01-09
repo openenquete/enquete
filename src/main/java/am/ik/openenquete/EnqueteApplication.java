@@ -54,14 +54,14 @@ public class EnqueteApplication {
 			}
 			// Add test data if empty
 			List<Session> sessions = asList(
-					Session.builder().sessionName("キーノート")
+					Session.builder().sessionName("1. はじめてのセッション")
 							.speakerDisplayNames(asList("Taro Yamada", "Ichiro Suzuki"))
 							.speakers(asList("foo", "making")).build(),
-					Session.builder().sessionName("Hello World!")
+					Session.builder().sessionName("2. Hello World!")
 							.speakerDisplayNames(asList("Taro Yamada", "Ichiro Tanaka"))
-							.speakers(asList("bar", "makits")).build());
-			Seminar seminar = Seminar.builder().seminarName("JJUG CCC Fall 2016")
-					.sessions(sessions).seminarDate(LocalDate.of(2016, 12, 3)).build();
+							.speakers(asList("foo", "makits")).build());
+			Seminar seminar = Seminar.builder().seminarName("サンプル勉強会").sessions(sessions)
+					.seminarDate(LocalDate.of(2016, 12, 3)).build();
 			sessions.forEach(session -> session.setSeminar(seminar));
 			Seminar created = seminarRepository.save(seminar);
 
@@ -78,9 +78,10 @@ public class EnqueteApplication {
 					.save(ResponseForSeminar.builder().comment("++").request("hoge")
 							.satisfaction(Satisfaction.BAD).seminar(created).build());
 
-			responseForSessionRepository.save(ResponseForSession.builder().comment("")
-					.difficulty(Difficulty.MODERATE).satisfaction(Satisfaction.EXCELLENT)
-					.username("foo").session(sessions.get(0)).build());
+			responseForSessionRepository.save(ResponseForSession.builder()
+					.comment("お疲れ様でした").difficulty(Difficulty.MODERATE)
+					.satisfaction(Satisfaction.EXCELLENT).username("foo")
+					.session(sessions.get(0)).build());
 			responseForSessionRepository.save(ResponseForSession.builder().comment("")
 					.difficulty(Difficulty.EASY).satisfaction(Satisfaction.GOOD)
 					.username("bar").session(sessions.get(0)).build());

@@ -12,4 +12,10 @@ import lombok.Data;
 @Component
 public class JjugProps {
 	private Set<String> adminUsers;
+	private Bitly bitly = new Bitly();
+
+	@Data
+	public static class Bitly {
+		private String accessToken;
+	}
 }

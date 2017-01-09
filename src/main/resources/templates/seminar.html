@@ -12,6 +12,9 @@
 <section>
     <h2 th:text="${seminar.seminarName +' (' + #temporals.format(seminar.seminarDate, 'yyyy/MM/dd') + ')'}">JJUG CCC
         2016 Fall</h2>
+    <p style="font-size: x-large" th:if="${shortenUrl}">
+        <a th:text="${shortenUrl}" th:href="${shortenUrl}" href="http://bit.ly/2i5a6BG">http://bit.ly/2i5a6BG</a>
+    </p>
     <p sec:authorize="authenticated">
         <span sec:authentication="principal.name">duke</span>さんログイン中。
     </p>

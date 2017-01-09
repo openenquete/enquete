@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import jjug.qrcode.QrCode;
 import jjug.questionnaire.ContextUsername;
 import jjug.session.Session;
 import jjug.urlshortener.UrlShortenerClient;
@@ -22,6 +23,7 @@ public class SeminarController {
 	private final ResponseForSeminarRepository responseForSeminarRepository;
 	private final ContextUsername contextUsername;
 	private final Optional<UrlShortenerClient> urlShortenerClient;
+	private final Optional<QrCode> qrCode;
 
 	@GetMapping("seminars/{seminarId}")
 	String list(@PathVariable UUID seminarId, Model model,
@@ -35,6 +37,7 @@ public class SeminarController {
 			String shortenUrl = client.shorten(requestURL);
 			model.addAttribute("shortenUrl", shortenUrl);
 		});
+		qrCode.ifPresent(code -> model.addAttribute("qrCode", code.dataUrl(requestURL)));
 		model.addAttribute("seminar", seminar);
 		model.addAttribute("sessions", sessions);
 		model.addAttribute("submitted", response.isPresent());

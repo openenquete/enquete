@@ -13,7 +13,9 @@
     <h2><span th:text="${s.sessionName}">キーノート</span> <span th:text="${s.speakerDisplayNames}">スピーカー</span></h2>
 </section>
 <section>
-    <a th:href="@{/sessions/{sessionId}(sessionId=${s.sessionId})}">アンケートフォーム</a>
+    <ul>
+        <li><a th:href="@{/sessions/{sessionId}(sessionId=${s.sessionId})}">アンケートフォーム</a></li>
+    </ul>
     <h3><span th:text="${s.sessionName}">キーノート</span>の感想</h3>
     <div>
         <h4>満足度はどうだったでしょうか？</h4>

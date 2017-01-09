@@ -80,7 +80,7 @@
     </ul>
     <div sec:authorize="authenticated">
         <hr/>
-        <a th:href="@{/}" href="index.html">🏠 JJUGアンケート</a>
+        <a th:href="@{/}" href="index.html" th:text="${@enqueteProps.applicationName}">🏠 アンケート</a>
     </div>
     <script src="../static/js/axios.min.js" th:src="@{/js/axios.min.js}"></script>
     <script src="../static/js/utils.js" th:src="@{/js/utils.js}"></script>

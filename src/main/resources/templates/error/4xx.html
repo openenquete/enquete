@@ -3,13 +3,13 @@
     <meta charset="UTF-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <title>JJUGアンケート</title>
+    <title th:text="${@enqueteProps.applicationName}">アンケート</title>
     <link rel="shortcut icon" th:href="@{/images/favicon.ico}" href="../../static/images/favicon.ico"/>
     <link rel="stylesheet" th:href="@{/css/style.css}" href="../../static/css/style.css"/>
 </head>
 <body>
 <section>
-    <h1>JJUGアンケート</h1>
+    <h1 th:text="${@enqueteProps.applicationName}">アンケート</h1>
 </section>
 <section>
     <h3>¯\_(ツ)_/¯</h3>

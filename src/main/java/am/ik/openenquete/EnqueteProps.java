@@ -13,6 +13,7 @@ import lombok.Data;
 @Data
 @Component
 public class EnqueteProps {
+	private String applicationName = "OpenEnquete";
 	private Set<String> adminUsers;
 	private Bitly bitly = new Bitly();
 	private QrCode qrCode = new QrCode();

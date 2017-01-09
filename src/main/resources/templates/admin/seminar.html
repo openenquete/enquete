@@ -39,7 +39,7 @@
                 th:text="${session.speakerDisplayNames}">スピーカー</span></a></li>
     </ul>
     <hr/>
-    <a th:href="@{/}" href="../index.html">🏠 JJUGアンケート</a>
+    <a th:href="@{/}" href="../index.html" th:text="${@enqueteProps.applicationName}">🏠 アンケート</a>
 </section>
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script type="text/javascript" th:inline="javascript">

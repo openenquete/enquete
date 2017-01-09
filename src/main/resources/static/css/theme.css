@@ -2,23 +2,27 @@
 
 body {
     color: #444;
-    background: #e6e6e6;
+    background: white;
     font-family: "PT Sans Caption", Arial, "Helvetica Neue", Helvetica, sans-serif
 }
 
 a {
-    color: #ef4034;
+    color: darkslateblue;
 }
 
 section {
-    background: #fff;
+    background: ghostwhite;
+    border: 1px solid #ccc;
 }
 
 th {
+    background: #0095ff;
+    color: #fff;
     border: 1px solid #ccc;
 }
 
 td {
+    background: #fff;
     border: 1px solid #ccc;
 }
 

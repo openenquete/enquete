@@ -19,11 +19,11 @@ import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 
-import am.ik.openenquete.JjugProps;
+import am.ik.openenquete.EnqueteProps;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-@ConditionalOnProperty(name = "jjug.qr-code.enabled", havingValue = "true", matchIfMissing = true)
+@ConditionalOnProperty(name = "enquete.qr-code.enabled", havingValue = "true", matchIfMissing = true)
 @Slf4j
 @CacheConfig(cacheNames = "qrcode")
 @Component
@@ -32,7 +32,7 @@ public class QrCode {
 	private final QRCodeWriter writer = new QRCodeWriter();
 	private final Map<EncodeHintType, ?> hints = Collections
 			.singletonMap(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.M);
-	private final JjugProps props;
+	private final EnqueteProps props;
 
 	@Cacheable
 	public String dataUrl(String url) {

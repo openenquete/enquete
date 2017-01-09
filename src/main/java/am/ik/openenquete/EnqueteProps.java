@@ -9,10 +9,10 @@ import org.springframework.stereotype.Component;
 
 import lombok.Data;
 
-@ConfigurationProperties(prefix = "jjug")
+@ConfigurationProperties(prefix = "enquete")
 @Data
 @Component
-public class JjugProps {
+public class EnqueteProps {
 	private Set<String> adminUsers;
 	private Bitly bitly = new Bitly();
 	private QrCode qrCode = new QrCode();

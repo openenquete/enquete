@@ -9,7 +9,7 @@ import lombok.*;
 @EqualsAndHashCode
 @RequiredArgsConstructor
 @Builder
-public class JjugUser implements Serializable {
+public class EnqueteUser implements Serializable {
 	private final String name;
 	private final String github;
 	private final String email;

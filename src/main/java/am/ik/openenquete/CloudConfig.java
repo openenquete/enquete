@@ -15,7 +15,7 @@ import lombok.Setter;
 
 @Profile("cloud")
 @Configuration
-@ConfigurationProperties("cloud")
+@ConfigurationProperties("enquete.cloud")
 @Getter
 @Setter
 public class CloudConfig extends AbstractCloudConfig {

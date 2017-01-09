@@ -5,15 +5,15 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 
-import am.ik.openenquete.JjugUser;
+import am.ik.openenquete.EnqueteUser;
 
 @Component
 public class ContextUsername {
 	public String getUsername() {
 		Authentication authentication = SecurityContextHolder.getContext()
 				.getAuthentication();
-		if (authentication != null && authentication.getPrincipal() instanceof JjugUser) {
-			JjugUser user = JjugUser.class.cast(authentication.getPrincipal());
+		if (authentication != null && authentication.getPrincipal() instanceof EnqueteUser) {
+			EnqueteUser user = EnqueteUser.class.cast(authentication.getPrincipal());
 			return user.getGithub();
 		}
 		else {

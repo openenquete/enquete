@@ -6,15 +6,15 @@ import java.util.Optional;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.PrincipalExtractor;
 import org.springframework.stereotype.Component;
 
-import am.ik.openenquete.JjugUser;
+import am.ik.openenquete.EnqueteUser;
 
 @Component
 public class JjugPrincipalExtractor implements PrincipalExtractor {
 	@Override
-	public JjugUser extractPrincipal(Map<String, Object> map) {
+	public EnqueteUser extractPrincipal(Map<String, Object> map) {
 		String github = getValue(map, "login");
 		String name = getValue(map, "name");
-		return JjugUser.builder().github(github).name(name.isEmpty() ? github : name)
+		return EnqueteUser.builder().github(github).name(name.isEmpty() ? github : name)
 				.email(getValue(map, "email")).avatarUrl(getValue(map, "avatar_url"))
 				.build();
 	}

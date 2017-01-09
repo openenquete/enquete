@@ -23,10 +23,10 @@ public class HomeController {
 
 	private final SeminarRepository seminarRepository;
 	private final SessionRepository sessionRepository;
-	private final JjugProps props;
+	private final EnqueteProps props;
 
 	@GetMapping("/")
-	String index(Model model, @AuthenticationPrincipal JjugUser user,
+	String index(Model model, @AuthenticationPrincipal EnqueteUser user,
 			@PageableDefault(sort = "seminarDate", direction = Sort.Direction.DESC, size = 3) Pageable pageable) {
 		Page<Seminar> openSeminars = seminarRepository
 				.findBySeminarClosedIsNull(pageable);

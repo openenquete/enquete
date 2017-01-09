@@ -10,13 +10,13 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
-import am.ik.openenquete.JjugProps;
+import am.ik.openenquete.EnqueteProps;
 import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
 public class JjugAuthoritiesExtractor implements AuthoritiesExtractor {
-	private final JjugProps props;
+	private final EnqueteProps props;
 
 	@Override
 	public List<GrantedAuthority> extractAuthorities(Map<String, Object> map) {

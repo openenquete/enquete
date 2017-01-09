@@ -12,16 +12,16 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
-import am.ik.openenquete.JjugProps;
+import am.ik.openenquete.EnqueteProps;
 import lombok.RequiredArgsConstructor;
 
-@ConditionalOnProperty(name = "jjug.bitly.access-token")
+@ConditionalOnProperty(name = "enquete.bitly.access-token")
 @Component
 @RequiredArgsConstructor
 @CacheConfig(cacheNames = "urlshortener")
 public class BitlyClient implements UrlShortenerClient {
 	private final RestTemplate restTemplate;
-	private final JjugProps props;
+	private final EnqueteProps props;
 
 	@Override
 	@Cacheable

@@ -24,7 +24,7 @@ section {
 }
 
 h1:before {
-    content: url("../images/jjug.png") ' ';
+    content: url("../images/h1-32x32.png") ' ';
 }
 
 h2:before {
@@ -32,7 +32,7 @@ h2:before {
 }
 
 h3:before {
-    content: url("../images/duke.ico");
+    content: url("../images/h3-32x32.png");
 }
 
 h3 {

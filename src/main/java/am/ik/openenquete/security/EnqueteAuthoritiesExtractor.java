@@ -15,7 +15,7 @@ import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
-public class JjugAuthoritiesExtractor implements AuthoritiesExtractor {
+public class EnqueteAuthoritiesExtractor implements AuthoritiesExtractor {
 	private final EnqueteProps props;
 
 	@Override

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import am.ik.openenquete.EnqueteUser;
 
 @Component
-public class JjugPrincipalExtractor implements PrincipalExtractor {
+public class EnquetePrincipalExtractor implements PrincipalExtractor {
 	@Override
 	public EnqueteUser extractPrincipal(Map<String, Object> map) {
 		String github = getValue(map, "login");

@@ -31,13 +31,13 @@
             <h4>満足度はどうだったでしょうか？</h4>
             <table>
                 <tr>
-                    <!--/*/ <th:block th:each="satisfaction : ${T(jjug.questionnaire.enums.Satisfaction).values()}"> /*/-->
+                    <!--/*/ <th:block th:each="satisfaction : ${T(am.ik.openenquete.questionnaire.enums.Satisfaction).values()}"> /*/-->
                     <th><label th:for="${#strings.toLowerCase(satisfaction)}"
                                th:text="#{'satisfaction.' + ${#strings.toLowerCase(satisfaction)}}">aaa</label></th>
                     <!--/*/ </th:block> /*/-->
                 </tr>
                 <tr>
-                    <!--/*/ <th:block th:each="satisfaction : ${T(jjug.questionnaire.enums.Satisfaction).values()}"> /*/-->
+                    <!--/*/ <th:block th:each="satisfaction : ${T(am.ik.openenquete.questionnaire.enums.Satisfaction).values()}"> /*/-->
                     <td><input type="radio" name="satisfaction" th:id="${#strings.toLowerCase(satisfaction)}"
                                th:value="${satisfaction}" required="required"/></td>
                     <!--/*/ </th:block> /*/-->
@@ -46,13 +46,13 @@
             <h4>難易度は良かったでしょうか？</h4>
             <table>
                 <tr>
-                    <!--/*/ <th:block th:each="difficulty : ${T(jjug.questionnaire.enums.Difficulty).values()}"> /*/-->
+                    <!--/*/ <th:block th:each="difficulty : ${T(am.ik.openenquete.questionnaire.enums.Difficulty).values()}"> /*/-->
                     <th><label th:for="${#strings.toLowerCase(difficulty)}"
                                th:text="#{'difficulty.' + ${#strings.toLowerCase(difficulty)}}">aaa</label></th>
                     <!--/*/ </th:block> /*/-->
                 </tr>
                 <tr>
-                    <!--/*/ <th:block th:each="difficulty : ${T(jjug.questionnaire.enums.Difficulty).values()}"> /*/-->
+                    <!--/*/ <th:block th:each="difficulty : ${T(am.ik.openenquete.questionnaire.enums.Difficulty).values()}"> /*/-->
                     <td><input type="radio" name="difficulty" th:id="${#strings.toLowerCase(difficulty)}"
                                th:value="${difficulty}" required="required"/></td>
                     <!--/*/ </th:block> /*/-->

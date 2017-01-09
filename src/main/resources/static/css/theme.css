@@ -1,0 +1,57 @@
+@import url(https://fonts.googleapis.com/css?family=PT+Sans+Caption:400,700);
+
+body {
+    color: #444;
+    background: #e6e6e6;
+    font-family: "PT Sans Caption", Arial, "Helvetica Neue", Helvetica, sans-serif
+}
+
+a {
+    color: #ef4034;
+}
+
+section {
+    background: #fff;
+}
+
+th {
+    border: 1px solid #ccc;
+}
+
+td {
+    border: 1px solid #ccc;
+}
+
+textarea {
+    border: 1px solid #ccc;
+}
+
+input[type="submit"]:hover, input[type="submit"]:focus {
+    color: #2c5777;
+    background-color: #bcd4e6;
+    border-color: #4c8dbd;
+    box-shadow: inset 0 1px 0 #E1ECF4;
+}
+
+input[type="submit"] {
+    color: #FFF;
+    background-color: #0095ff;
+    box-shadow: inset 0 1px 0 #66bfff;
+    display: inline-block;
+    position: relative;
+    padding: .61538462em 1em;
+    vertical-align: middle;
+    min-height: 2.46153846em;
+    box-sizing: border-box;
+    font-weight: 400;
+    font-family: inherit;
+    line-height: 1;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 2px;
+    border: 1px solid #07c;
+    cursor: pointer;
+    outline: none;
+    touch-action: manipulation;
+    transition: all .1s ease-in;
+}

@@ -1,14 +1,11 @@
 package am.ik.openenquete.urlshortener;
 
-import java.net.URI;
-
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
@@ -26,12 +23,10 @@ public class BitlyClient implements UrlShortenerClient {
 	@Override
 	@Cacheable
 	public String shorten(String longUrl) {
-		final URI url = UriComponentsBuilder.fromHttpUrl("https://api-ssl.bitly.com")
-				.pathSegment("v3", "shorten")
-				.queryParam("access_token", props.getBitly().getAccessToken())
-				.queryParam("longUrl", longUrl).build().encode().toUri();
 		try {
-			JsonNode response = restTemplate.getForObject(url, JsonNode.class);
+			JsonNode response = restTemplate.getForObject(
+					"https://api-ssl.bitly.com/v3/shorten?access_token={token}&longUrl={url}",
+					JsonNode.class, props.getBitly().getAccessToken(), longUrl);
 			if (response.has("data") && response.get("data").has("url")) {
 				return response.get("data").get("url").asText();
 			}

@@ -16,11 +16,17 @@ public class EnqueteProps {
 	private String applicationName = "OpenEnquete";
 	private Set<String> adminUsers;
 	private Bitly bitly = new Bitly();
+	private Googl googl = new Googl();
 	private QrCode qrCode = new QrCode();
 
 	@Data
 	public static class Bitly {
 		private String accessToken;
+	}
+
+	@Data
+	public static class Googl {
+		private String apiKey;
 	}
 
 	@Data

@@ -14,6 +14,24 @@
 </section>
 <section>
     <h3>アクセス権限がありません</h3>
+    <table th:if="${@environment.acceptsProfiles('default')}">
+        <tr>
+            <th>Status</th>
+            <td th:text="${status}"></td>
+        </tr>
+        <tr>
+            <th>Error</th>
+            <td th:text="${error}"></td>
+        </tr>
+        <tr>
+            <th>Exception</th>
+            <td th:text="${exception}"></td>
+        </tr>
+        <tr>
+            <th>Message</th>
+            <td th:text="${message}"></td>
+        </tr>
+    </table>
 </section>
 </body>
 </html>

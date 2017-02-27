@@ -36,6 +36,10 @@
             <th>Message</th>
             <td th:text="${message}"></td>
         </tr>
+        <tr th:if="${trace}">
+            <th>Trace</th>
+            <td><pre th:text="${trace}"></pre></td>
+        </tr>
     </table>
 </section>
 </body>

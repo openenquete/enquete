@@ -6,7 +6,6 @@ import static java.util.stream.Collectors.*;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.util.*;
 import java.util.function.Supplier;
@@ -36,7 +35,6 @@ import lombok.RequiredArgsConstructor;
 @Controller
 @RequiredArgsConstructor
 public class ResultController {
-	private static final ZoneId TOKYO = ZoneId.of("Asia/Tokyo");
 	private final SeminarRepository seminarRepository;
 	private final SessionRepository sessionRepository;
 	private final ResponseForSeminarRepository responseForSeminarRepository;
@@ -70,16 +68,7 @@ public class ResultController {
 				.findBySession_Seminar_SeminarId(seminarId);
 		Map<LocalDateTime, Long> countsForSessions = countsForSession(
 				responseForSessions);
-
-		countsForSessions.forEach((k, v) -> {
-			System.out.println(k + "\t" + v);
-		});
-
 		Map<LocalDateTime, Long> countsForSeminar = countsForSeminar(responses);
-
-		countsForSeminar.forEach((k, v) -> {
-			System.out.println(k + "\t" + v);
-		});
 
 		model.addAttribute("seminar", seminar);
 		model.addAttribute("satisfactions", satisfactions);

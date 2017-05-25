@@ -21,6 +21,10 @@ public interface ResponseForSessionRepository
 	List<ResponseForSession> findBySession_SessionId(@Param("sessionId") UUID sessionId);
 
 	@RestResource(exported = false)
+	@PreAuthorize("hasRole('ADMIN')")
+	List<ResponseForSession> findBySession_Seminar_SeminarId(@Param("seminarId") UUID seminarId);
+
+	@RestResource(exported = false)
 	Optional<ResponseForSession> findBySession_SessionIdAndUsername(
 			@Param("sessionId") UUID sessionId, @Param("username") String username);
 

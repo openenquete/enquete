@@ -32,6 +32,9 @@
             <li th:each="comment : ${comments}" th:text="${comment}"></li>
         </ul>
     </div>
+    <h3>回答数の遷移</h3>
+    <div id="countsForSeminarChart" style="height: 400px;"></div>
+    <div id="countsForSessionsChart" style="height: 400px;"></div>
     <h3>セッション毎の感想</h3>
     <ul>
         <li th:each="session : ${seminar.sessions}"><a
@@ -53,7 +56,25 @@
         satisfactionsChart.draw(satisfactionsData, {
             title: '満足度'
         });
+
+
+        var countsForSeminar = JSON.parse(/*[[${countsForSeminar}]]*/ '[]');
+        var countsForSessions = JSON.parse(/*[[${countsForSessions}]]*/ '[]');
+
+        var countsForSeminarChart = new google.visualization.ColumnChart(
+            document.getElementById('countsForSeminarChart'));
+        countsForSeminarChart.draw(google.visualization.arrayToDataTable(countsForSeminar), {
+            title: 'イベント全体の回答数推移'
+        });
+
+        var countsForSessionsChart = new google.visualization.ColumnChart(
+            document.getElementById('countsForSessionsChart'));
+        countsForSessionsChart.draw(google.visualization.arrayToDataTable(countsForSessions), {
+            title: 'セッション毎の回答数推移'
+        });
     }
+
+
 </script>
 </body>
 </html>

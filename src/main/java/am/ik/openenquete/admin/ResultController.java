@@ -1,11 +1,15 @@
 package am.ik.openenquete.admin;
 
 import static java.util.Comparator.comparing;
+import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.*;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.*;
-import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import org.springframework.context.MessageSource;
@@ -32,7 +36,7 @@ import lombok.RequiredArgsConstructor;
 @Controller
 @RequiredArgsConstructor
 public class ResultController {
-
+	private static final ZoneId TOKYO = ZoneId.of("Asia/Tokyo");
 	private final SeminarRepository seminarRepository;
 	private final SessionRepository sessionRepository;
 	private final ResponseForSeminarRepository responseForSeminarRepository;
@@ -62,12 +66,31 @@ public class ResultController {
 				.filter(s -> !StringUtils.isEmpty(s)) //
 				.collect(toList());
 
+		List<ResponseForSession> responseForSessions = responseForSessionRepository
+				.findBySession_Seminar_SeminarId(seminarId);
+		Map<LocalDateTime, Long> countsForSessions = countsForSession(
+				responseForSessions);
+
+		countsForSessions.forEach((k, v) -> {
+			System.out.println(k + "\t" + v);
+		});
+
+		Map<LocalDateTime, Long> countsForSeminar = countsForSeminar(responses);
+
+		countsForSeminar.forEach((k, v) -> {
+			System.out.println(k + "\t" + v);
+		});
+
 		model.addAttribute("seminar", seminar);
 		model.addAttribute("satisfactions", satisfactions);
 		model.addAttribute("satisfactionsArray",
 				arrayJsonString(satisfactions, "Satisfaction"));
 		model.addAttribute("comments", comments);
 		model.addAttribute("requests", requests);
+
+		model.addAttribute("countsForSeminar", arrayJsonString(countsForSeminar, "Time"));
+		model.addAttribute("countsForSessions",
+				arrayJsonString(countsForSessions, "Time"));
 		return "admin/seminar";
 	}
 
@@ -102,19 +125,25 @@ public class ResultController {
 		return "admin/session";
 	}
 
-	String arrayJsonString(Map<String, Long> map, String label) throws IOException {
+	String arrayJsonString(Map<?, Long> map, String label) throws IOException {
+		Supplier<List<Object[]>> listSupplier = () -> {
+			List<Object[]> result = new ArrayList<>();
+			result.add(new Object[] { label, "Count" });
+			return result;
+		};
+		return arrayJsonString(map, listSupplier);
+	}
+
+	String arrayJsonString(Map<?, Long> map, Supplier<List<Object[]>> listSupplier)
+			throws IOException {
 		return objectMapper.writeValueAsString(map.entrySet().stream()
 				.map(e -> new Object[] { e.getKey(), e.getValue() })
-				.collect(toCollection(() -> {
-					List<Object[]> result = new ArrayList<>();
-					result.add(new Object[] { label, "Count" });
-					return result;
-				})));
+				.collect(toCollection(listSupplier)));
 	}
 
 	Map<String, Long> satisfactionMap(Map<Satisfaction, Long> map, Locale locale) {
-		Map<Satisfaction, Long> satisfactions = Stream.of(Satisfaction.values()).collect(
-				toMap(Function.identity(), e -> 0L, (k, v) -> v, LinkedHashMap::new));
+		Map<Satisfaction, Long> satisfactions = Stream.of(Satisfaction.values())
+				.collect(toMap(identity(), e -> 0L, (k, v) -> v, LinkedHashMap::new));
 		map.forEach(satisfactions::put);
 		return satisfactions.entrySet().stream()
 				.collect(toMap(e -> satisfaction(e.getKey(), locale), Map.Entry::getValue,
@@ -122,8 +151,8 @@ public class ResultController {
 	}
 
 	Map<String, Long> difficultyMap(Map<Difficulty, Long> map, Locale locale) {
-		Map<Difficulty, Long> difficulties = Stream.of(Difficulty.values()).collect(
-				toMap(Function.identity(), e -> 0L, (k, v) -> v, LinkedHashMap::new));
+		Map<Difficulty, Long> difficulties = Stream.of(Difficulty.values())
+				.collect(toMap(identity(), e -> 0L, (k, v) -> v, LinkedHashMap::new));
 		map.forEach(difficulties::put);
 		return difficulties.entrySet().stream()
 				.collect(toMap(e -> difficulty(e.getKey(), locale), Map.Entry::getValue,
@@ -138,5 +167,42 @@ public class ResultController {
 	String difficulty(Difficulty difficulty, Locale locale) {
 		return messageSource.getMessage("difficulty." + difficulty.name().toLowerCase(),
 				null, locale);
+	}
+
+	Map<LocalDateTime, Long> countsForSession(
+			List<ResponseForSession> responseForSessions) {
+		Map<LocalDateTime, Long> countsForSessions = responseForSessions.stream()
+				.map(r -> r.getCreatedAt()
+						.atOffset(ZoneOffset.ofHours(18 /* 9 + 9 WTF! */))
+						.toLocalDateTime().withMinute(0).withSecond(0).withNano(0))
+				.collect(groupingBy(identity(), TreeMap::new, counting()));
+		return fillZero(countsForSessions);
+	}
+
+	Map<LocalDateTime, Long> countsForSeminar(
+			List<ResponseForSeminar> responseForSeminar) {
+		Map<LocalDateTime, Long> countsForSeminar = responseForSeminar.stream()
+				.map(r -> r.getCreatedAt()
+						.atOffset(ZoneOffset.ofHours(18 /* 9 + 9 WTF! */))
+						.toLocalDateTime().withMinute(0).withSecond(0).withNano(0))
+				.collect(groupingBy(identity(), TreeMap::new, counting()));
+		return fillZero(countsForSeminar);
+	}
+
+	Map<LocalDateTime, Long> fillZero(Map<LocalDateTime, Long> counts) {
+		if (!counts.isEmpty()) {
+			Iterator<LocalDateTime> iterator = counts.keySet().iterator();
+			LocalDateTime earliest = iterator.next();
+			LocalDateTime latest = earliest;
+			while (iterator.hasNext()) {
+				latest = iterator.next();
+			}
+			for (LocalDateTime dt = earliest; dt.isBefore(latest); dt = dt.plusHours(1)) {
+				if (!counts.containsKey(dt)) {
+					counts.put(dt, 0L);
+				}
+			}
+		}
+		return counts;
 	}
 }

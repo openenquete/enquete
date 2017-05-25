@@ -1,5 +1,6 @@
 package am.ik.openenquete.admin;
 
+import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.*;
 
 import java.io.IOException;
@@ -50,10 +51,16 @@ public class ResultController {
 						groupingBy(ResponseForSeminar::getSatisfaction, counting())),
 				locale);
 
-		List<String> comments = responses.stream().map(ResponseForSeminar::getComment)
-				.filter(s -> !StringUtils.isEmpty(s)).collect(toList());
-		List<String> requests = responses.stream().map(ResponseForSeminar::getRequest)
-				.filter(s -> !StringUtils.isEmpty(s)).collect(toList());
+		List<String> comments = responses.stream() //
+				.sorted(comparing(ResponseForSeminar::getCreatedAt)) //
+				.map(ResponseForSeminar::getComment) //
+				.filter(s -> !StringUtils.isEmpty(s)) //
+				.collect(toList());
+		List<String> requests = responses.stream() //
+				.sorted(comparing(ResponseForSeminar::getCreatedAt)) //
+				.map(ResponseForSeminar::getRequest) //
+				.filter(s -> !StringUtils.isEmpty(s)) //
+				.collect(toList());
 
 		model.addAttribute("seminar", seminar);
 		model.addAttribute("satisfactions", satisfactions);
@@ -78,8 +85,11 @@ public class ResultController {
 				responses.stream().collect(
 						groupingBy(ResponseForSession::getDifficulty, counting())),
 				locale);
-		List<String> comments = responses.stream().map(ResponseForSession::getComment)
-				.filter(s -> !StringUtils.isEmpty(s)).collect(toList());
+		List<String> comments = responses.stream() //
+				.sorted(comparing(ResponseForSession::getCreatedAt)) //
+				.map(ResponseForSession::getComment) //
+				.filter(s -> !StringUtils.isEmpty(s)) //
+				.collect(toList());
 
 		model.addAttribute("s", session);
 		model.addAttribute("satisfactions", satisfactions);

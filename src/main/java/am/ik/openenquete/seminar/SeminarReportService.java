@@ -23,17 +23,6 @@ public class SeminarReportService {
 		List<Summary<Satisfaction>> summaries = responseForSessionRepository
 				.reportBySatisfaction(seminarId);
 		Map<Summary.Session, Summary.Report<Satisfaction>> report = report(summaries);
-
-		report.entrySet().stream()
-				.collect(toMap(Map.Entry::getKey,
-						e -> new Summary.SatisfactionReport(e.getValue())))
-				.entrySet().stream()
-				.sorted(Comparator.<Map.Entry<Summary.Session, Summary.SatisfactionReport>>comparingDouble(
-						x -> x.getValue().getNsat())
-						.thenComparing(x -> x.getValue().getCount()).reversed())
-				.collect(toMap(Map.Entry::getKey, Map.Entry::getValue, (k, v) -> v,
-						LinkedHashMap::new));
-
 		return report.entrySet().stream()
 				.collect(toMap(Map.Entry::getKey,
 						e -> new Summary.SatisfactionReport(e.getValue())))

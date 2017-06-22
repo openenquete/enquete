@@ -29,7 +29,8 @@ public class SeminarReportService {
 				.entrySet().stream()
 				.sorted(Comparator.<Map.Entry<Summary.Session, Summary.SatisfactionReport>>comparingDouble(
 						x -> x.getValue().getNsat())
-						.thenComparing(x -> x.getValue().getCount()).reversed())
+						.thenComparing(x -> x.getValue().getCount())
+						.thenComparing(x -> x.getValue().getAverage()).reversed())
 				.collect(toMap(Map.Entry::getKey, Map.Entry::getValue, (k, v) -> v,
 						LinkedHashMap::new));
 	}

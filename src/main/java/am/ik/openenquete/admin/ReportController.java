@@ -33,8 +33,9 @@ public class ReportController {
 			throws IOException {
 		Seminar seminar = seminarRepository.findOne(seminarId).get();
 
-		Map<Summary.Session, Summary.Report<Satisfaction>> satisfactionReport = seminarReportService
+		Map<Summary.Session, Summary.SatisfactionReport> satisfactionReport = seminarReportService
 				.satisfactionReport(seminarId);
+
 		Map<Summary.Session, Summary.Report<Difficulty>> difficultyReport = seminarReportService
 				.difficultyReport(seminarId);
 
@@ -51,8 +52,8 @@ public class ReportController {
 	}
 
 	<T extends Comparable<T>> String arrayJsonString(
-			Map<Summary.Session, Summary.Report<T>> map, Class<? extends Enum> clazz,
-			Locale locale) throws IOException {
+			Map<Summary.Session, ? extends Summary.Report<T>> map,
+			Class<? extends Enum> clazz, Locale locale) throws IOException {
 		List<Object[]> dataList = new ArrayList<>();
 		int len = clazz.getEnumConstants().length;
 		dataList.add(labels(clazz, locale));
@@ -92,15 +93,15 @@ public class ReportController {
 	}
 
 	List<Object[]> correlationData(
-			Map<Summary.Session, Summary.Report<Satisfaction>> satisfactionReport,
+			Map<Summary.Session, Summary.SatisfactionReport> satisfactionReport,
 			Map<Summary.Session, Summary.Report<Difficulty>> difficultyReport) {
 		List<Object[]> data = new ArrayList<>();
 		data.add(new String[] { "満足度", "難易度" });
 		satisfactionReport.forEach((session, satisfaction) -> {
 			Summary.Report<Difficulty> difficulty = difficultyReport.get(session);
 			if (difficulty != null) {
-				data.add(new Object[] { satisfaction.getAverage(),
-						difficulty.getAverage() });
+				data.add(
+						new Object[] { satisfaction.getNsat(), difficulty.getAverage() });
 			}
 		});
 		return data;

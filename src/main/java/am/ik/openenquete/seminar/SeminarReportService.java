@@ -18,11 +18,31 @@ import lombok.RequiredArgsConstructor;
 public class SeminarReportService {
 	private final ResponseForSessionRepository responseForSessionRepository;
 
-	public Map<Summary.Session, Summary.Report<Satisfaction>> satisfactionReport(
+	public Map<Summary.Session, Summary.SatisfactionReport> satisfactionReport(
 			UUID seminarId) {
 		List<Summary<Satisfaction>> summaries = responseForSessionRepository
 				.reportBySatisfaction(seminarId);
-		return report(summaries);
+		Map<Summary.Session, Summary.Report<Satisfaction>> report = report(summaries);
+
+		report.entrySet().stream()
+				.collect(toMap(Map.Entry::getKey,
+						e -> new Summary.SatisfactionReport(e.getValue())))
+				.entrySet().stream()
+				.sorted(Comparator.<Map.Entry<Summary.Session, Summary.SatisfactionReport>>comparingDouble(
+						x -> x.getValue().getNsat())
+						.thenComparing(x -> x.getValue().getCount()).reversed())
+				.collect(toMap(Map.Entry::getKey, Map.Entry::getValue, (k, v) -> v,
+						LinkedHashMap::new));
+
+		return report.entrySet().stream()
+				.collect(toMap(Map.Entry::getKey,
+						e -> new Summary.SatisfactionReport(e.getValue())))
+				.entrySet().stream()
+				.sorted(Comparator.<Map.Entry<Summary.Session, Summary.SatisfactionReport>>comparingDouble(
+						x -> x.getValue().getNsat())
+						.thenComparing(x -> x.getValue().getCount()).reversed())
+				.collect(toMap(Map.Entry::getKey, Map.Entry::getValue, (k, v) -> v,
+						LinkedHashMap::new));
 	}
 
 	public Map<Summary.Session, Summary.Report<Difficulty>> difficultyReport(
@@ -47,7 +67,7 @@ public class SeminarReportService {
 							.collect(toList());
 					return new Summary.Report<>(average, total, count, details);
 				})).entrySet().stream()
-				.sorted(Comparator.<Map.Entry<Summary.Session, Summary.Report<T>>> comparingDouble(
+				.sorted(Comparator.<Map.Entry<Summary.Session, Summary.Report<T>>>comparingDouble(
 						x -> x.getValue().getAverage())
 						.thenComparing(x -> x.getValue().getCount()).reversed())
 				.collect(toMap(Map.Entry::getKey, Map.Entry::getValue, (k, v) -> v,

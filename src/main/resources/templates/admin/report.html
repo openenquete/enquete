@@ -26,13 +26,18 @@
         <table>
             <tr>
                 <th>セッション名</th>
+                <th>
+                    NSAT (<a
+                        href="http://download.microsoft.com/download/3/2/2/32269687-F181-449A-8C72-317090403C70/Determining_Net_User_Satisfaction.docx">?</a>)
+                </th>
                 <th>平均満足度</th>
                 <th>回答数</th>
             </tr>
             <tr th:each="r : ${satisfactionReport}">
                 <td><a th:href="@{/admin/sessions/{sessionId}/result(sessionId=${r.key.sessionId})}"
                        th:text="${r.key.sessionName}"></a></td>
-                <td th:text="${r.value.average}"></td>
+                <td th:text="${r.value.nsat}"></td>
+                <td th:text="${T(java.lang.Math).round(r.value.average * 100) / 100.0}"></td>
                 <td th:text="${r.value.count}"></td>
             </tr>
         </table>
@@ -49,7 +54,7 @@
             <tr th:each="r : ${difficultyReport}">
                 <td><a th:href="@{/admin/sessions/{sessionId}/result(sessionId=${r.key.sessionId})}"
                        th:text="${r.key.sessionName}"></a></td>
-                <td th:text="${r.value.average}"></td>
+                <td th:text="${T(java.lang.Math).round(r.value.average * 100) / 100.0}"></td>
                 <td th:text="${r.value.count}"></td>
             </tr>
         </table>

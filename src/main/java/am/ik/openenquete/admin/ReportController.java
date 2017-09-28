@@ -51,6 +51,25 @@ public class ReportController {
 		return "admin/report";
 	}
 
+	@GetMapping("admin/seminars/report")
+	String report(Model model, Locale locale) throws IOException {
+		Map<Summary.Session, Summary.SatisfactionReport> satisfactionReport = seminarReportService
+				.satisfactionReportAll();
+
+		Map<Summary.Session, Summary.Report<Difficulty>> difficultyReport = seminarReportService
+				.difficultyReportAll();
+
+		model.addAttribute("satisfactionReport", satisfactionReport);
+		model.addAttribute("difficultyReport", difficultyReport);
+		model.addAttribute("satisfactionsArray",
+				arrayJsonString(satisfactionReport, Satisfaction.class, locale));
+		model.addAttribute("difficultiesArray",
+				arrayJsonString(difficultyReport, Difficulty.class, locale));
+		model.addAttribute("correlationData", objectMapper.writeValueAsString(
+				correlationData(satisfactionReport, difficultyReport)));
+		return "admin/reportAll";
+	}
+
 	<T extends Comparable<T>> String arrayJsonString(
 			Map<Summary.Session, ? extends Summary.Report<T>> map,
 			Class<? extends Enum> clazz, Locale locale) throws IOException {

@@ -22,7 +22,8 @@ public interface ResponseForSessionRepository
 
 	@RestResource(exported = false)
 	@PreAuthorize("hasRole('ADMIN')")
-	List<ResponseForSession> findBySession_Seminar_SeminarId(@Param("seminarId") UUID seminarId);
+	List<ResponseForSession> findBySession_Seminar_SeminarId(
+			@Param("seminarId") UUID seminarId);
 
 	@RestResource(exported = false)
 	Optional<ResponseForSession> findBySession_SessionIdAndUsername(
@@ -35,4 +36,10 @@ public interface ResponseForSessionRepository
 
 	@Query("SELECT s.sessionId AS sessionId, s.sessionName AS sessionName, x.difficulty AS value, COUNT(x.difficulty) AS count, COUNT(x.difficulty) * x.difficulty AS total, x.session.seminar.seminarId AS seminarId FROM ResponseForSession x JOIN x.session s GROUP BY s.sessionId, x.difficulty HAVING x.session.seminar.seminarId = :seminarId")
 	List<Summary<Difficulty>> reportByDifficulty(@Param("seminarId") UUID seminarId);
+
+	@Query("SELECT s.sessionId AS sessionId, s.sessionName AS sessionName, x.satisfaction AS value, COUNT(x.satisfaction) AS count, COUNT(x.satisfaction) * x.satisfaction AS total, x.session.seminar.seminarId AS seminarId, x.session.seminar.seminarName AS seminarName FROM ResponseForSession x JOIN x.session s GROUP BY s.sessionId, x.satisfaction")
+	List<Summary<Satisfaction>> reportBySatisfactionAll();
+
+	@Query("SELECT s.sessionId AS sessionId, s.sessionName AS sessionName, x.difficulty AS value, COUNT(x.difficulty) AS count, COUNT(x.difficulty) * x.difficulty AS total, x.session.seminar.seminarId AS seminarId, x.session.seminar.seminarName AS seminarName FROM ResponseForSession x JOIN x.session s GROUP BY s.sessionId, x.difficulty")
+	List<Summary<Difficulty>> reportByDifficultyAll();
 }

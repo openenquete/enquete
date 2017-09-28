@@ -4,6 +4,7 @@ import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.*;
 
 import java.util.*;
+import java.util.function.Supplier;
 
 import org.springframework.stereotype.Service;
 
@@ -18,10 +19,9 @@ import lombok.RequiredArgsConstructor;
 public class SeminarReportService {
 	private final ResponseForSessionRepository responseForSessionRepository;
 
-	public Map<Summary.Session, Summary.SatisfactionReport> satisfactionReport(
-			UUID seminarId) {
-		List<Summary<Satisfaction>> summaries = responseForSessionRepository
-				.reportBySatisfaction(seminarId);
+	private Map<Summary.Session, Summary.SatisfactionReport> satisfactionReport(
+			Supplier<List<Summary<Satisfaction>>> supplier) {
+		List<Summary<Satisfaction>> summaries = supplier.get();
 		Map<Summary.Session, Summary.Report<Satisfaction>> report = report(summaries);
 		return report.entrySet().stream()
 				.collect(toMap(Map.Entry::getKey,
@@ -35,11 +35,31 @@ public class SeminarReportService {
 						LinkedHashMap::new));
 	}
 
+	private Map<Summary.Session, Summary.Report<Difficulty>> difficultyReport(
+			Supplier<List<Summary<Difficulty>>> supplier) {
+		List<Summary<Difficulty>> summaries = supplier.get();
+		return report(summaries);
+	}
+
+	public Map<Summary.Session, Summary.SatisfactionReport> satisfactionReport(
+			UUID seminarId) {
+		return this.satisfactionReport(
+				() -> responseForSessionRepository.reportBySatisfaction(seminarId));
+	}
+
 	public Map<Summary.Session, Summary.Report<Difficulty>> difficultyReport(
 			UUID seminarId) {
-		List<Summary<Difficulty>> summaries = responseForSessionRepository
-				.reportByDifficulty(seminarId);
-		return report(summaries);
+		return this.difficultyReport(
+				() -> responseForSessionRepository.reportByDifficulty(seminarId));
+	}
+
+	public Map<Summary.Session, Summary.SatisfactionReport> satisfactionReportAll() {
+		return this.satisfactionReport(
+				responseForSessionRepository::reportBySatisfactionAll);
+	}
+
+	public Map<Summary.Session, Summary.Report<Difficulty>> difficultyReportAll() {
+		return this.difficultyReport(responseForSessionRepository::reportByDifficultyAll);
 	}
 
 	<T extends Comparable<T>, S extends Summary<T>> Map<Summary.Session, Summary.Report<T>> report(

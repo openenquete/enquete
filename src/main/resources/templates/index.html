@@ -43,6 +43,7 @@
                 <a th:href="@{/admin/seminars/{seminarId}/result(seminarId=${seminar.seminarId})}"
                    th:text="${seminar.seminarName +' (' + #temporals.format(seminar.seminarDate, 'yyyy/MM/dd') + ')'}">JJUGナイトセミナー2017年1月</a>
             </li>
+            <li><a th:href="@{/admin/seminars/report}">🆕 全セッションレポート</a></li>
         </ul>
     </section>
     <section>

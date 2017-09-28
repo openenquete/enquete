@@ -4,21 +4,16 @@
     <meta charset="UTF-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <title th:text="${seminar.seminarName}">Ooops, page not found</title>
+    <title>全セッションレポート</title>
     <link rel="shortcut icon" th:href="@{/images/favicon.ico}" href="../../static/images/favicon.ico"/>
     <link rel="stylesheet" th:href="@{/css/style.css}" href="../../static/css/style.css"/>
     <link rel="stylesheet" th:href="@{/css/theme.css}" href="../../static/css/theme.css"/>
 </head>
 <body>
 <section>
-    <h2 th:text="${seminar.seminarName +' (' + #temporals.format(seminar.seminarDate, 'yyyy/MM/dd') + ')'}">JJUG CCC
-        2016 Fall</h2>
+    <h2>全セッションレポート</h2>
 </section>
 <section>
-    <ul>
-        <li><a th:href="@{/seminars/{seminarId}(seminarId=${seminar.seminarId})}">アンケートフォーム</a></li>
-        <li><a th:href="@{/admin/seminars/{seminarId}/result(seminarId=${seminar.seminarId})}">結果</a></li>
-    </ul>
     <h2>セッション毎レポート</h2>
     <div>
         <h3>満足度</h3>
@@ -26,6 +21,7 @@
         <table>
             <tr>
                 <th>順位</th>
+                <th>セミナー名</th>
                 <th>セッション名</th>
                 <th>
                     NSAT (<a
@@ -36,6 +32,8 @@
             </tr>
             <tr th:each="r,s : ${satisfactionReport}">
                 <td th:text="${s.count}"></td>
+                <td><a th:href="@{/admin/seminars/{seminarId}/report(seminarId=${r.key.seminarId})}"
+                       th:text="${r.key.seminarName}"></a></td>
                 <td><a th:href="@{/admin/sessions/{sessionId}/result(sessionId=${r.key.sessionId})}"
                        th:text="${r.key.sessionName}"></a></td>
                 <td th:text="${r.value.nsat}"></td>
@@ -50,12 +48,15 @@
         <table>
             <tr>
                 <th>順位</th>
+                <th>セミナー名</th>
                 <th>セッション名</th>
                 <th>平均難易度</th>
                 <th>回答数</th>
             </tr>
             <tr th:each="r,s : ${difficultyReport}">
                 <td th:text="${s.count}"></td>
+                <td><a th:href="@{/admin/seminars/{seminarId}/report(seminarId=${r.key.seminarId})}"
+                       th:text="${r.key.seminarName}"></a></td>
                 <td><a th:href="@{/admin/sessions/{sessionId}/result(sessionId=${r.key.sessionId})}"
                        th:text="${r.key.sessionName}"></a></td>
                 <td th:text="${T(java.lang.Math).round(r.value.average * 100) / 100.0}"></td>
@@ -74,6 +75,7 @@
     <script type="text/javascript" th:inline="javascript">
         google.charts.load('current', {'packages': ['corechart']});
         google.charts.setOnLoadCallback(drawChart);
+
         function drawChart() {
             var satisfactionsArray = JSON.parse(/*[[${satisfactionsArray}]]*/ '[["Task", "Hours per Day", "aaa", "bbb"],["Work", 11, 13, 14],["Eat", 2, 8, 2],["Commute", 2, 1, 1],["Watch TV", 2, 3, 5],["Sleep", 7, 2, 9]]');
             var satisfactionsData = google.visualization.arrayToDataTable(satisfactionsArray);

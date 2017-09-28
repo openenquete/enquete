@@ -18,10 +18,13 @@ public interface Summary<T extends Comparable<T>> {
 
 	UUID getSeminarId();
 
+	String getSeminarName();
+
 	Long getCount();
 
 	default Session asSession() {
-		return new Session(getSessionId(), getSessionName());
+		return new Session(getSessionId(), getSessionName(), getSeminarId(),
+				getSeminarName());
 	}
 
 	default Detail<T> asDetail() {
@@ -32,6 +35,8 @@ public interface Summary<T extends Comparable<T>> {
 	final class Session {
 		private final UUID sessionId;
 		private final String sessionName;
+		private final UUID seminarId;
+		private final String seminarName;
 	}
 
 	class Report<T extends Comparable<T>> {

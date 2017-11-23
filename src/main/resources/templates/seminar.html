@@ -61,7 +61,7 @@
                 </table>
                 <h4>次回、期待するコンテンツを教えてください</h4>
                 <textarea name="request"></textarea>
-                <h4>全体で何かご意見があれば教えてください</h4>
+                <h4>全体で何かご意見があれば教えてください (コメント内容の表現にはご配慮お願いいたします。)</h4>
                 <textarea name="comment"></textarea>
                 <hr/>
                 <input type="hidden" name="seminarId" th:value="${seminarId}"/>
@@ -75,7 +75,7 @@
                 <img src="../static/images/thanks.png" th:src="@{/images/thanks.png}"/>
             </div>
         </form>
-        <h3>セッション毎の感想 (コメント内容の表現にはご配慮お願いいたします。)</h3>
+        <h3>セッション毎の感想</h3>
         <ul>
             <li th:each="session : ${seminar.sessions}"><a
                     th:href="@{/sessions/{sessionId}(sessionId=${session.sessionId})}"

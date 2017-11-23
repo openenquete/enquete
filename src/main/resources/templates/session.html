@@ -12,17 +12,13 @@
 <body>
 <section>
     <h2><span th:text="${s.sessionName}">キーノート</span> <span th:text="${s.speakerDisplayNames}">スピーカー</span></h2>
-    <p style="font-size: x-large" th:if="${shortenUrl}">
-        <a th:text="${shortenUrl}" th:href="${shortenUrl}" href="http://bit.ly/2i5a6BG">http://bit.ly/2i5a6BG</a>
-    </p>
-    <p th:if="${qrCode}">
-        <img th:src="|data:image/png;base64,${qrCode}|"/>
-    </p>
     <p sec:authorize="authenticated">
         <span sec:authentication="principal.name">duke</span>さんログイン中。
     </p>
     <p sec:authorize="anonymous">
         <a href="index.html" th:href="@{/}">GitHubでログイン</a>
+        <br />
+        <span style="font-size: x-small;">ログインは必須ではありません。ログインした場合は回答履歴を確認できます。匿名希望の場合はログインしないでください。</span>
     </p>
 </section>
 <section>
@@ -59,7 +55,7 @@
                     <!--/*/ </th:block> /*/-->
                 </tr>
             </table>
-            <h4>何かご意見があれば教えてください</h4>
+            <h4>何かご意見があれば教えてください (コメント内容の表現にはご配慮お願いいたします。)</h4>
             <textarea name="comment"></textarea>
             <hr/>
             <input type="hidden" name="sessionId" th:value="${sessionId}"/>
@@ -125,6 +121,15 @@
             return false;
         }
     </script>
+</section>
+<section>
+    <h3>短縮URL / QRコード</h3>
+    <p style="font-size: x-large" th:if="${shortenUrl}">
+        <a th:text="${shortenUrl}" th:href="${shortenUrl}" href="http://bit.ly/2i5a6BG">http://bit.ly/2i5a6BG</a>
+    </p>
+    <p th:if="${qrCode}">
+        <img th:src="|data:image/png;base64,${qrCode}|"/>
+    </p>
 </section>
 </body>
 </html>

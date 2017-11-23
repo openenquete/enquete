@@ -13,17 +13,13 @@
 <section>
     <h2 th:text="${seminar.seminarName +' (' + #temporals.format(seminar.seminarDate, 'yyyy/MM/dd') + ')'}">JJUG CCC
         2016 Fall</h2>
-    <p style="font-size: x-large" th:if="${shortenUrl}">
-        <a th:text="${shortenUrl}" th:href="${shortenUrl}" href="http://bit.ly/2i5a6BG">http://bit.ly/2i5a6BG</a>
-    </p>
-    <p th:if="${qrCode}">
-        <img th:src="|data:image/png;base64,${qrCode}|"/>
-    </p>
     <p sec:authorize="authenticated">
         <span sec:authentication="principal.name">duke</span>さんログイン中。
     </p>
     <p sec:authorize="anonymous">
         <a href="index.html" th:href="@{/}">GitHubでログイン</a>
+        <br />
+        <span style="font-size: x-small;">ログインは必須ではありません。ログインした場合は回答履歴を確認できます。匿名希望の場合はログインしないでください。</span>
     </p>
 </section>
 <section sec:authorize="hasRole('ADMIN')">
@@ -79,7 +75,7 @@
                 <img src="../static/images/thanks.png" th:src="@{/images/thanks.png}"/>
             </div>
         </form>
-        <h3>セッション毎の感想</h3>
+        <h3>セッション毎の感想 (コメント内容の表現にはご配慮お願いいたします。)</h3>
         <ul>
             <li th:each="session : ${seminar.sessions}"><a
                     th:href="@{/sessions/{sessionId}(sessionId=${session.sessionId})}"
@@ -204,6 +200,15 @@
             return false;
         }
     </script>
+</section>
+<section>
+    <h3>短縮URL / QRコード</h3>
+    <p style="font-size: x-large" th:if="${shortenUrl}">
+        <a th:text="${shortenUrl}" th:href="${shortenUrl}" href="http://bit.ly/2i5a6BG">http://bit.ly/2i5a6BG</a>
+    </p>
+    <p th:if="${qrCode}">
+        <img th:src="|data:image/png;base64,${qrCode}|"/>
+    </p>
 </section>
 </body>
 </html>

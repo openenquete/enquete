@@ -1,8 +1,17 @@
 package am.ik.openenquete.admin;
 
-import static java.util.Comparator.comparing;
-import static java.util.function.Function.identity;
-import static java.util.stream.Collectors.*;
+import am.ik.openenquete.questionnaire.enums.Difficulty;
+import am.ik.openenquete.questionnaire.enums.Satisfaction;
+import am.ik.openenquete.seminar.*;
+import am.ik.openenquete.session.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.MessageSource;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -11,26 +20,9 @@ import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
-import org.springframework.context.MessageSource;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import am.ik.openenquete.questionnaire.enums.Difficulty;
-import am.ik.openenquete.questionnaire.enums.Satisfaction;
-import am.ik.openenquete.seminar.ResponseForSeminar;
-import am.ik.openenquete.seminar.ResponseForSeminarRepository;
-import am.ik.openenquete.seminar.Seminar;
-import am.ik.openenquete.seminar.SeminarRepository;
-import am.ik.openenquete.session.ResponseForSession;
-import am.ik.openenquete.session.ResponseForSessionRepository;
-import am.ik.openenquete.session.Session;
-import am.ik.openenquete.session.SessionRepository;
-import lombok.RequiredArgsConstructor;
+import static java.util.Comparator.comparing;
+import static java.util.function.Function.identity;
+import static java.util.stream.Collectors.*;
 
 @Controller
 @RequiredArgsConstructor
@@ -41,6 +33,7 @@ public class ResultController {
 	private final ResponseForSessionRepository responseForSessionRepository;
 	private final MessageSource messageSource;
 	private final ObjectMapper objectMapper;
+	private final SeminarReportService seminarReportService;
 
 	@GetMapping("admin/seminars/{seminarId}/result")
 	String seminarForAdmin(@PathVariable UUID seminarId, Model model, Locale locale)
@@ -89,7 +82,31 @@ public class ResultController {
 		List<ResponseForSession> responses = responseForSessionRepository
 				.findBySession_SessionId(sessionId);
 		Session session = sessionRepository.findOne(sessionId).get();
-		Map<String, Long> satisfactions = satisfactionMap(
+		Map<Summary.Session, Summary.SatisfactionReport> satisfactionReportMap = seminarReportService
+				.satisfactionReport(session.getSeminar().getSeminarId());
+        double nsatAverage = satisfactionReportMap.values().stream()
+                .mapToLong(Summary.SatisfactionReport::getNsat)
+                .summaryStatistics().getAverage();
+        double satisfactionAverage = satisfactionReportMap.values().stream()
+                .mapToDouble(Summary.SatisfactionReport::getAverage)
+                .summaryStatistics().getAverage();
+
+		int rank = 0;
+		Optional<Summary.SatisfactionReport> report = Optional.empty();
+		for (Map.Entry<Summary.Session, Summary.SatisfactionReport> entry : satisfactionReportMap.entrySet()) {
+			rank++;
+			if (Objects.equals(entry.getKey().getSessionId(), sessionId)) {
+				report = Optional.of(entry.getValue());
+				break;
+			}
+		}
+		long nsat = report
+				.map(Summary.SatisfactionReport::getNsat)
+				.orElse(0L);
+		double satisfaction = report
+				.map(Summary.SatisfactionReport::getAverage)
+				.orElse(0.0);
+        Map<String, Long> satisfactions = satisfactionMap(
 				responses.stream().collect(
 						groupingBy(ResponseForSession::getSatisfaction, counting())),
 				locale);
@@ -111,6 +128,13 @@ public class ResultController {
 		model.addAttribute("difficultiesArray",
 				arrayJsonString(difficulties, "Difficulty"));
 		model.addAttribute("comments", comments);
+        model.addAttribute("responseCount", responses.size());
+        model.addAttribute("satisfaction", satisfaction);
+        model.addAttribute("satisfactionAverage", satisfactionAverage);
+        model.addAttribute("nsat", nsat);
+        model.addAttribute("nsatAverage", nsatAverage);
+        model.addAttribute("rank", rank);
+        model.addAttribute("sessionCount", satisfactionReportMap.size());
 		return "admin/session";
 	}
 

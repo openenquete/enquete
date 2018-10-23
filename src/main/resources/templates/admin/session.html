@@ -8,6 +8,15 @@
     <link rel="shortcut icon" th:href="@{/images/favicon.ico}" href="../../static/images/favicon.ico"/>
     <link rel="stylesheet" th:href="@{/css/style.css}" href="../../static/css/style.css"/>
     <link rel="stylesheet" th:href="@{/css/theme.css}" href="../../static/css/theme.css"/>
+    <style>
+        .rank-invisible {
+            display: inline;
+        }
+
+        .rank-visible {
+            display: none;
+        }
+    </style>
 </head>
 <body>
 <section>
@@ -19,8 +28,40 @@
     </ul>
     <h3><span th:text="${s.sessionName}">キーノート</span>の感想</h3>
     <div>
+        <p>
+            回答数: <strong th:text="${responseCount}"></strong>
+        </p>
         <h4>満足度はどうだったでしょうか？</h4>
         <div id="satisfactionsChart" style="height: 400px;"></div>
+        <table>
+            <tr>
+                <th>セッションの満足度</th>
+                <td th:text="${T(java.lang.Math).round(satisfaction * 100) / 100.0}"></td>
+            </tr>
+            <tr>
+                <th>セッションの<a
+                        href="http://download.microsoft.com/download/3/2/2/32269687-F181-449A-8C72-317090403C70/Determining_Net_User_Satisfaction.docx">NSAT</a>
+                </th>
+                <td th:text="${nsat}"></td>
+            </tr>
+            <tr>
+                <th>全セッションの平均満足度</th>
+                <td th:text="${T(java.lang.Math).round(satisfactionAverage * 100) / 100.0}"></td>
+            </tr>
+            <tr>
+                <th>全セッションの平均<a
+                        href="http://download.microsoft.com/download/3/2/2/32269687-F181-449A-8C72-317090403C70/Determining_Net_User_Satisfaction.docx">NSAT</a>
+                </th>
+                <td th:text="${T(java.lang.Math).round(nsatAverage * 100) / 100.0}"></td>
+            </tr>
+            <tr>
+                <th>NSATランキング</th>
+                <td><a class="rank-invisible" id="look">👁見る👁</a><strong th:text="${rank}"
+                                                                          class="rank-visible"></strong>位<br/>
+                    / 全<span th:text="${sessionCount}"></span>セッション中
+                </td>
+            </tr>
+        </table>
         <h4>難易度は良かったでしょうか？</h4>
         <div id="difficultiesChart" style="height: 400px;"></div>
         <h4>何かご意見があれば教えてください</h4>
@@ -43,6 +84,7 @@
 <script type="text/javascript" th:inline="javascript">
     google.charts.load('current', {'packages': ['corechart']});
     google.charts.setOnLoadCallback(drawChart);
+
     function drawChart() {
         var satisfactionsArray = JSON.parse(/*[[${satisfactionsArray}]]*/ '[["Task", "Hours per Day"],["Work", 11],["Eat", 2],["Commute", 2],["Watch TV", 2],["Sleep", 7]]');
         var satisfactionsData = google.visualization.arrayToDataTable(satisfactionsArray);
@@ -58,6 +100,17 @@
             title: '難易度'
         });
     }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        var look = document.getElementById('look');
+        look.addEventListener('click', function (e) {
+            e.preventDefault();
+            var rankVisible = document.querySelector('.rank-visible');
+            var rankInvisible = document.querySelector('.rank-invisible');
+            rankVisible.style.display = 'inline';
+            rankInvisible.style.display = 'none';
+        });
+    })
 </script>
 </body>
 </html>

@@ -5,6 +5,7 @@ import am.ik.openenquete.questionnaire.UsernameHolder;
 import am.ik.openenquete.questionnaire.enums.Difficulty;
 import am.ik.openenquete.questionnaire.enums.Satisfaction;
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.data.rest.core.annotation.RestResource;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -34,6 +35,7 @@ public class ResponseForSession implements Serializable, UsernameHolder, IpAddre
 	@ManyToOne
 	@JoinColumn(name = "session_id", updatable = false)
 	@NotNull
+	@RestResource(exported = false)
 	private Session session;
 	@Column(updatable = false)
 	private String username;

@@ -4,6 +4,7 @@ import am.ik.openenquete.questionnaire.IpAddressHolder;
 import am.ik.openenquete.questionnaire.UsernameHolder;
 import am.ik.openenquete.questionnaire.enums.Satisfaction;
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.data.rest.core.annotation.RestResource;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -31,6 +32,7 @@ public class ResponseForSeminar implements Serializable, UsernameHolder, IpAddre
 	@ManyToOne
 	@JoinColumn(name = "seminar_id", updatable = false)
 	@NotNull
+	@RestResource(exported = false)
 	private Seminar seminar;
 	@Column(updatable = false)
 	private String username;

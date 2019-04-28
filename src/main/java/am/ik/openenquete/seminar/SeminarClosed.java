@@ -2,7 +2,9 @@ package am.ik.openenquete.seminar;
 
 import am.ik.openenquete.questionnaire.UsernameHolder;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.data.rest.core.annotation.RestResource;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -23,6 +25,7 @@ public class SeminarClosed implements Serializable, UsernameHolder {
 	private UUID closedId;
 	@OneToOne
 	@JoinColumn(name = "seminar_id")
+	@RestResource(exported = false)
 	private Seminar seminar;
 	@Column(updatable = false)
 	private String username;
@@ -80,7 +83,7 @@ public class SeminarClosed implements Serializable, UsernameHolder {
 		return this.createdAt;
 	}
 
-	@JsonIgnore
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	public Seminar getSeminar() {
 		return this.seminar;
 	}

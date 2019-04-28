@@ -6,9 +6,10 @@ import java.util.UUID;
 
 import org.springframework.data.repository.Repository;
 import org.springframework.data.repository.query.Param;
+import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.annotation.RestResource;
 
-@RestResource(path = "responses_for_seminar", rel = "responses_for_seminar")
+@RepositoryRestResource(path = "responses_for_seminar")
 public interface ResponseForSeminarRepository
 		extends Repository<ResponseForSeminar, UUID> {
 

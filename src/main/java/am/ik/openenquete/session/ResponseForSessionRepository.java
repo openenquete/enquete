@@ -7,13 +7,14 @@ import java.util.UUID;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
 import org.springframework.data.repository.query.Param;
+import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.annotation.RestResource;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import am.ik.openenquete.questionnaire.enums.Difficulty;
 import am.ik.openenquete.questionnaire.enums.Satisfaction;
 
-@RestResource(path = "responses_for_session", rel = "responses_for_session")
+@RepositoryRestResource(path = "responses_for_session")
 public interface ResponseForSessionRepository
 		extends Repository<ResponseForSession, UUID> {
 	@RestResource(exported = false)

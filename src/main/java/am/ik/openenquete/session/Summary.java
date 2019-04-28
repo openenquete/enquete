@@ -1,7 +1,6 @@
 package am.ik.openenquete.session;
 
 import am.ik.openenquete.questionnaire.enums.Satisfaction;
-import lombok.Value;
 
 import java.util.List;
 import java.util.UUID;
@@ -31,7 +30,6 @@ public interface Summary<T extends Comparable<T>> {
         return new Detail<>(getValue(), getTotal(), getCount());
     }
 
-    @Value
     final class Session {
 
         private final UUID sessionId;
@@ -41,6 +39,78 @@ public interface Summary<T extends Comparable<T>> {
         private final UUID seminarId;
 
         private final String seminarName;
+
+        public Session(UUID sessionId, String sessionName, UUID seminarId, String seminarName) {
+            this.sessionId = sessionId;
+            this.sessionName = sessionName;
+            this.seminarId = seminarId;
+            this.seminarName = seminarName;
+        }
+
+        public boolean equals(final Object o) {
+            if (o == this) {
+                return true;
+            }
+            if (!(o instanceof Summary.Session)) {
+                return false;
+            }
+            final Session other = (Session) o;
+            final Object this$sessionId = this.getSessionId();
+            final Object other$sessionId = other.getSessionId();
+            if (this$sessionId == null ? other$sessionId != null : !this$sessionId.equals(other$sessionId)) {
+                return false;
+            }
+            final Object this$sessionName = this.getSessionName();
+            final Object other$sessionName = other.getSessionName();
+            if (this$sessionName == null ? other$sessionName != null : !this$sessionName.equals(other$sessionName)) {
+                return false;
+            }
+            final Object this$seminarId = this.getSeminarId();
+            final Object other$seminarId = other.getSeminarId();
+            if (this$seminarId == null ? other$seminarId != null : !this$seminarId.equals(other$seminarId)) {
+                return false;
+            }
+            final Object this$seminarName = this.getSeminarName();
+            final Object other$seminarName = other.getSeminarName();
+            if (this$seminarName == null ? other$seminarName != null : !this$seminarName.equals(other$seminarName)) {
+                return false;
+            }
+            return true;
+        }
+
+        public UUID getSeminarId() {
+            return this.seminarId;
+        }
+
+        public String getSeminarName() {
+            return this.seminarName;
+        }
+
+        public UUID getSessionId() {
+            return this.sessionId;
+        }
+
+        public String getSessionName() {
+            return this.sessionName;
+        }
+
+        public int hashCode() {
+            final int PRIME = 59;
+            int result = 1;
+            final Object $sessionId = this.getSessionId();
+            result = result * PRIME + ($sessionId == null ? 43 : $sessionId.hashCode());
+            final Object $sessionName = this.getSessionName();
+            result = result * PRIME + ($sessionName == null ? 43 : $sessionName.hashCode());
+            final Object $seminarId = this.getSeminarId();
+            result = result * PRIME + ($seminarId == null ? 43 : $seminarId.hashCode());
+            final Object $seminarName = this.getSeminarName();
+            result = result * PRIME + ($seminarName == null ? 43 : $seminarName.hashCode());
+            return result;
+        }
+
+        public String toString() {
+            return "Summary.Session(sessionId=" + this.getSessionId() + ", sessionName=" + this.getSessionName() + ", seminarId=" + this.getSeminarId() + ", seminarName=" + this.getSeminarName() + ")";
+        }
     }
 
     class Report<T extends Comparable<T>> {
@@ -116,7 +186,6 @@ public interface Summary<T extends Comparable<T>> {
         }
     }
 
-    @Value
     class Detail<T extends Comparable<T>> {
 
         private final T value;
@@ -124,5 +193,61 @@ public interface Summary<T extends Comparable<T>> {
         private final long total;
 
         private final long count;
+
+        public Detail(T value, long total, long count) {
+            this.value = value;
+            this.total = total;
+            this.count = count;
+        }
+
+        public boolean equals(final Object o) {
+            if (o == this) {
+                return true;
+            }
+            if (!(o instanceof Summary.Detail)) {
+                return false;
+            }
+            final Detail<?> other = (Detail<?>) o;
+            final Object this$value = this.getValue();
+            final Object other$value = other.getValue();
+            if (this$value == null ? other$value != null : !this$value.equals(other$value)) {
+                return false;
+            }
+            if (this.getTotal() != other.getTotal()) {
+                return false;
+            }
+            if (this.getCount() != other.getCount()) {
+                return false;
+            }
+            return true;
+        }
+
+        public long getCount() {
+            return this.count;
+        }
+
+        public long getTotal() {
+            return this.total;
+        }
+
+        public T getValue() {
+            return this.value;
+        }
+
+        public int hashCode() {
+            final int PRIME = 59;
+            int result = 1;
+            final Object $value = this.getValue();
+            result = result * PRIME + ($value == null ? 43 : $value.hashCode());
+            final long $total = this.getTotal();
+            result = result * PRIME + (int) ($total >>> 32 ^ $total);
+            final long $count = this.getCount();
+            result = result * PRIME + (int) ($count >>> 32 ^ $count);
+            return result;
+        }
+
+        public String toString() {
+            return "Summary.Detail(value=" + this.getValue() + ", total=" + this.getTotal() + ", count=" + this.getCount() + ")";
+        }
     }
 }

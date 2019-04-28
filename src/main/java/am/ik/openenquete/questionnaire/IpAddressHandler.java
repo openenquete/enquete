@@ -1,7 +1,6 @@
 package am.ik.openenquete.questionnaire;
 
-import javax.servlet.http.HttpServletRequest;
-
+import org.slf4j.Logger;
 import org.springframework.data.rest.core.annotation.HandleBeforeCreate;
 import org.springframework.data.rest.core.annotation.HandleBeforeSave;
 import org.springframework.data.rest.core.annotation.RepositoryEventHandler;
@@ -9,16 +8,20 @@ import org.springframework.http.server.ServletServerHttpRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
-import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import javax.servlet.http.HttpServletRequest;
 
 @RepositoryEventHandler
 @Component
-@AllArgsConstructor
-@Slf4j
 public class IpAddressHandler {
 	static final String X_FORWARDED_FOR = "X-Forwarded-For";
+
+	private static final Logger log = org.slf4j.LoggerFactory.getLogger(IpAddressHandler.class);
+
 	private final HttpServletRequest request;
+
+	public IpAddressHandler(HttpServletRequest request) {
+		this.request = request;
+	}
 
 	@HandleBeforeCreate
 	@HandleBeforeSave

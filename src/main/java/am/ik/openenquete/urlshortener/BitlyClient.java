@@ -1,5 +1,7 @@
 package am.ik.openenquete.urlshortener;
 
+import am.ik.openenquete.EnqueteProps;
+import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
@@ -7,18 +9,17 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
-import com.fasterxml.jackson.databind.JsonNode;
-
-import am.ik.openenquete.EnqueteProps;
-import lombok.RequiredArgsConstructor;
-
 @ConditionalOnProperty(name = "enquete.bitly.access-token")
 @Component
-@RequiredArgsConstructor
 @CacheConfig(cacheNames = "urlshortener")
 public class BitlyClient implements UrlShortenerClient {
 	private final RestTemplate restTemplate;
 	private final EnqueteProps props;
+
+	public BitlyClient(RestTemplate restTemplate, EnqueteProps props) {
+		this.restTemplate = restTemplate;
+		this.props = props;
+	}
 
 	@Override
 	@Cacheable

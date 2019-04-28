@@ -1,32 +1,41 @@
 package am.ik.openenquete.admin;
 
-import java.io.IOException;
-import java.util.*;
-import java.util.stream.Stream;
-
-import org.springframework.context.MessageSource;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import am.ik.openenquete.questionnaire.enums.Difficulty;
 import am.ik.openenquete.questionnaire.enums.Satisfaction;
 import am.ik.openenquete.seminar.Seminar;
 import am.ik.openenquete.seminar.SeminarReportService;
 import am.ik.openenquete.seminar.SeminarRepository;
 import am.ik.openenquete.session.Summary;
-import lombok.RequiredArgsConstructor;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.context.MessageSource;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.UUID;
+import java.util.stream.Stream;
 
 @Controller
-@RequiredArgsConstructor
 public class ReportController {
 	private final SeminarRepository seminarRepository;
 	private final SeminarReportService seminarReportService;
 	private final ObjectMapper objectMapper;
 	private final MessageSource messageSource;
+
+	public ReportController(SeminarRepository seminarRepository, SeminarReportService seminarReportService, ObjectMapper objectMapper, MessageSource messageSource) {
+		this.seminarRepository = seminarRepository;
+		this.seminarReportService = seminarReportService;
+		this.objectMapper = objectMapper;
+		this.messageSource = messageSource;
+	}
 
 	@GetMapping("admin/seminars/{seminarId}/report")
 	String report(@PathVariable UUID seminarId, Model model, Locale locale)

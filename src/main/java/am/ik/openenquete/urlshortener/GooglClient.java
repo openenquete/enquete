@@ -1,8 +1,7 @@
 package am.ik.openenquete.urlshortener;
 
-import java.util.Collections;
-import java.util.Map;
-
+import am.ik.openenquete.EnqueteProps;
+import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
@@ -10,18 +9,21 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
-import com.fasterxml.jackson.databind.JsonNode;
-
-import am.ik.openenquete.EnqueteProps;
-import lombok.RequiredArgsConstructor;
+import java.util.Collections;
+import java.util.Map;
 
 @ConditionalOnProperty(name = "enquete.googl.api-key")
 @Component
-@RequiredArgsConstructor
 @CacheConfig(cacheNames = "urlshortener")
 public class GooglClient implements UrlShortenerClient {
 	private final RestTemplate restTemplate;
 	private final EnqueteProps props;
+
+	@java.beans.ConstructorProperties({"restTemplate", "props"})
+	public GooglClient(RestTemplate restTemplate, EnqueteProps props) {
+		this.restTemplate = restTemplate;
+		this.props = props;
+	}
 
 	@Override
 	@Cacheable

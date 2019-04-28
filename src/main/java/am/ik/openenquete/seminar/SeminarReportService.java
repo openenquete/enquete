@@ -1,23 +1,30 @@
 package am.ik.openenquete.seminar;
 
-import static java.util.Comparator.comparing;
-import static java.util.stream.Collectors.*;
-
-import java.util.*;
-import java.util.function.Supplier;
-
-import org.springframework.stereotype.Service;
-
 import am.ik.openenquete.questionnaire.enums.Difficulty;
 import am.ik.openenquete.questionnaire.enums.Satisfaction;
 import am.ik.openenquete.session.ResponseForSessionRepository;
 import am.ik.openenquete.session.Summary;
-import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.util.Comparator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.function.Supplier;
+
+import static java.util.Comparator.comparing;
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
 
 @Service
-@RequiredArgsConstructor
 public class SeminarReportService {
 	private final ResponseForSessionRepository responseForSessionRepository;
+
+	public SeminarReportService(ResponseForSessionRepository responseForSessionRepository) {
+		this.responseForSessionRepository = responseForSessionRepository;
+	}
 
 	private Map<Summary.Session, Summary.SatisfactionReport> satisfactionReport(
 			Supplier<List<Summary<Satisfaction>>> supplier) {

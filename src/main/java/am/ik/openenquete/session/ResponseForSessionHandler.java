@@ -1,19 +1,20 @@
 package am.ik.openenquete.session;
 
+import am.ik.openenquete.seminar.Seminar;
+import am.ik.openenquete.seminar.SeminarRepository;
 import org.springframework.data.rest.core.annotation.HandleBeforeCreate;
 import org.springframework.data.rest.core.annotation.HandleBeforeSave;
 import org.springframework.data.rest.core.annotation.RepositoryEventHandler;
 import org.springframework.stereotype.Component;
 
-import am.ik.openenquete.seminar.Seminar;
-import am.ik.openenquete.seminar.SeminarRepository;
-import lombok.RequiredArgsConstructor;
-
 @RepositoryEventHandler(ResponseForSession.class)
 @Component
-@RequiredArgsConstructor
 public class ResponseForSessionHandler {
 	private final SeminarRepository seminarRepository;
+
+	public ResponseForSessionHandler(SeminarRepository seminarRepository) {
+		this.seminarRepository = seminarRepository;
+	}
 
 	@HandleBeforeCreate
 	@HandleBeforeSave

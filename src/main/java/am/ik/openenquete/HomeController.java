@@ -1,7 +1,9 @@
 package am.ik.openenquete;
 
-import java.util.List;
-
+import am.ik.openenquete.seminar.Seminar;
+import am.ik.openenquete.seminar.SeminarRepository;
+import am.ik.openenquete.session.Session;
+import am.ik.openenquete.session.SessionRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -11,19 +13,20 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import am.ik.openenquete.seminar.Seminar;
-import am.ik.openenquete.seminar.SeminarRepository;
-import am.ik.openenquete.session.Session;
-import am.ik.openenquete.session.SessionRepository;
-import lombok.RequiredArgsConstructor;
+import java.util.List;
 
 @Controller
-@RequiredArgsConstructor
 public class HomeController {
 
 	private final SeminarRepository seminarRepository;
 	private final SessionRepository sessionRepository;
 	private final EnqueteProps props;
+
+	public HomeController(SeminarRepository seminarRepository, SessionRepository sessionRepository, EnqueteProps props) {
+		this.seminarRepository = seminarRepository;
+		this.sessionRepository = sessionRepository;
+		this.props = props;
+	}
 
 	@GetMapping("/")
 	String index(Model model, @AuthenticationPrincipal EnqueteUser user,

@@ -2,10 +2,17 @@ package am.ik.openenquete.admin;
 
 import am.ik.openenquete.questionnaire.enums.Difficulty;
 import am.ik.openenquete.questionnaire.enums.Satisfaction;
-import am.ik.openenquete.seminar.*;
-import am.ik.openenquete.session.*;
+import am.ik.openenquete.seminar.ResponseForSeminar;
+import am.ik.openenquete.seminar.ResponseForSeminarRepository;
+import am.ik.openenquete.seminar.Seminar;
+import am.ik.openenquete.seminar.SeminarReportService;
+import am.ik.openenquete.seminar.SeminarRepository;
+import am.ik.openenquete.session.ResponseForSession;
+import am.ik.openenquete.session.ResponseForSessionRepository;
+import am.ik.openenquete.session.Session;
+import am.ik.openenquete.session.SessionRepository;
+import am.ik.openenquete.session.Summary;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,16 +23,28 @@ import org.springframework.web.bind.annotation.PathVariable;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.TreeMap;
+import java.util.UUID;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import static java.util.Comparator.comparing;
 import static java.util.function.Function.identity;
-import static java.util.stream.Collectors.*;
+import static java.util.stream.Collectors.counting;
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.toCollection;
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
 
 @Controller
-@RequiredArgsConstructor
 public class ResultController {
 	private final SeminarRepository seminarRepository;
 	private final SessionRepository sessionRepository;
@@ -34,6 +53,17 @@ public class ResultController {
 	private final MessageSource messageSource;
 	private final ObjectMapper objectMapper;
 	private final SeminarReportService seminarReportService;
+
+    public ResultController(SeminarRepository seminarRepository, SessionRepository sessionRepository, ResponseForSeminarRepository responseForSeminarRepository,
+                            ResponseForSessionRepository responseForSessionRepository, MessageSource messageSource, ObjectMapper objectMapper, SeminarReportService seminarReportService) {
+        this.seminarRepository = seminarRepository;
+        this.sessionRepository = sessionRepository;
+        this.responseForSeminarRepository = responseForSeminarRepository;
+        this.responseForSessionRepository = responseForSessionRepository;
+        this.messageSource = messageSource;
+        this.objectMapper = objectMapper;
+        this.seminarReportService = seminarReportService;
+    }
 
 	@GetMapping("admin/seminars/{seminarId}/result")
 	String seminarForAdmin(@PathVariable UUID seminarId, Model model, Locale locale)

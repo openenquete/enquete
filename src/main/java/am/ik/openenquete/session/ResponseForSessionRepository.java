@@ -17,7 +17,7 @@ import am.ik.openenquete.questionnaire.enums.Satisfaction;
 public interface ResponseForSessionRepository
 		extends Repository<ResponseForSession, UUID> {
 	@RestResource(exported = false)
-	@PreAuthorize("hasRole('ADMIN') or @sessionRepository.findOne(#sessionId)?.get()?.speakers?.contains(principal?.github)")
+	@PreAuthorize("hasRole('ADMIN') or @sessionRepository.findBySessionId(#sessionId)?.get()?.speakers?.contains(principal?.github)")
 	List<ResponseForSession> findBySession_SessionId(@Param("sessionId") UUID sessionId);
 
 	@RestResource(exported = false)

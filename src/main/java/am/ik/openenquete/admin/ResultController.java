@@ -70,7 +70,7 @@ public class ResultController {
 			throws IOException {
 		List<ResponseForSeminar> responses = responseForSeminarRepository
 				.findBySeminar_SeminarId(seminarId);
-		Seminar seminar = seminarRepository.findOne(seminarId).get();
+		Seminar seminar = seminarRepository.findBySeminarId(seminarId).get();
 		Map<String, Long> satisfactions = satisfactionMap(
 				responses.stream().collect(
 						groupingBy(ResponseForSeminar::getSatisfaction, counting())),
@@ -111,7 +111,7 @@ public class ResultController {
 			throws IOException {
 		List<ResponseForSession> responses = responseForSessionRepository
 				.findBySession_SessionId(sessionId);
-		Session session = sessionRepository.findOne(sessionId).get();
+		Session session = sessionRepository.findBySessionId(sessionId).get();
 		Map<Summary.Session, Summary.SatisfactionReport> satisfactionReportMap = seminarReportService
 				.satisfactionReport(session.getSeminar().getSeminarId());
         double nsatAverage = satisfactionReportMap.values().stream()

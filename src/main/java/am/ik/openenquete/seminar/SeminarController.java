@@ -34,7 +34,7 @@ public class SeminarController {
 	@GetMapping("seminars/{seminarId}")
 	String list(@PathVariable UUID seminarId, Model model,
 			@Value("#{request.requestURL}") String requestURL) {
-		Seminar seminar = seminarRepository.findOne(seminarId).get();
+		Seminar seminar = seminarRepository.findBySeminarId(seminarId).get();
 		List<Session> sessions = seminar.getSessions();
 		Optional<ResponseForSeminar> response = responseForSeminarRepository
 				.findBySeminar_SeminarIdAndUsername(seminarId,

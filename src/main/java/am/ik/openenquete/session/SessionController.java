@@ -32,7 +32,7 @@ public class SessionController {
 	@GetMapping("sessions/{sessionId}")
 	String session(@PathVariable UUID sessionId, Model model,
 			@Value("#{request.requestURL}") String requestURL) {
-		Session session = sessionRepository.findOne(sessionId).get();
+		Session session = sessionRepository.findBySessionId(sessionId).get();
 		Optional<ResponseForSession> response = responseForSessionRepository
 				.findBySession_SessionIdAndUsername(sessionId,
 						contextUsername.getUsername());

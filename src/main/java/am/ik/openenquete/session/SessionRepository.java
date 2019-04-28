@@ -8,13 +8,13 @@ import org.springframework.data.repository.Repository;
 
 public interface SessionRepository extends Repository<Session, UUID> {
 
-	Optional<Session> findOne(UUID id);
+	Optional<Session> findBySessionId(UUID id);
 
 	List<Session> findAll();
 
 	Session save(Session session);
 
-	void delete(UUID id);
+	void deleteBySessionId(UUID id);
 
 	List<Session> findBySpeakers(String speaker);
 }

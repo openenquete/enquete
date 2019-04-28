@@ -10,11 +10,11 @@ import org.springframework.data.rest.core.annotation.RestResource;
 @RestResource(path = "seminar_closed", rel = "seminar_closed")
 public interface SeminarClosedRepository extends Repository<SeminarClosed, UUID> {
 
-	Optional<SeminarClosed> findOne(UUID id);
+	Optional<SeminarClosed> findByClosedId(UUID id);
 
 	SeminarClosed save(SeminarClosed closed);
 
 	default void delete(@Param("closedId") UUID closedId) {
-		findOne(closedId).ifPresent(closed -> closed.getSeminar().setSeminarClosed(null));
+		findByClosedId(closedId).ifPresent(closed -> closed.getSeminar().setSeminarClosed(null));
 	}
 }

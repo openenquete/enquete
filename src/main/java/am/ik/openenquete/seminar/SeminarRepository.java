@@ -11,7 +11,7 @@ import org.springframework.data.repository.query.Param;
 import am.ik.openenquete.session.Session;
 
 public interface SeminarRepository extends Repository<Seminar, UUID> {
-	Optional<Seminar> findOne(UUID id);
+	Optional<Seminar> findBySeminarId(UUID id);
 
 	Optional<Seminar> findBySessions(@Param("sessions") Session session);
 

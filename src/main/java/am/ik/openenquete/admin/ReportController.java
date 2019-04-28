@@ -40,7 +40,7 @@ public class ReportController {
 	@GetMapping("admin/seminars/{seminarId}/report")
 	String report(@PathVariable UUID seminarId, Model model, Locale locale)
 			throws IOException {
-		Seminar seminar = seminarRepository.findOne(seminarId).get();
+		Seminar seminar = seminarRepository.findBySeminarId(seminarId).get();
 
 		Map<Summary.Session, Summary.SatisfactionReport> satisfactionReport = seminarReportService
 				.satisfactionReport(seminarId);

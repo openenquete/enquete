@@ -1,113 +1,128 @@
 package am.ik.openenquete.session;
 
-import java.util.List;
-import java.util.UUID;
-
 import am.ik.openenquete.questionnaire.enums.Satisfaction;
 import lombok.Value;
 
+import java.util.List;
+import java.util.UUID;
+
 public interface Summary<T extends Comparable<T>> {
 
-	T getValue();
+    UUID getSessionId();
 
-	Long getTotal();
+    String getSessionName();
 
-	UUID getSessionId();
+    T getValue();
 
-	String getSessionName();
+    Long getCount();
 
-	UUID getSeminarId();
+    Long getTotal();
 
-	String getSeminarName();
+    UUID getSeminarId();
 
-	Long getCount();
+    String getSeminarName();
 
-	default Session asSession() {
-		return new Session(getSessionId(), getSessionName(), getSeminarId(),
-				getSeminarName());
-	}
+    default Session asSession() {
+        return new Session(getSessionId(), getSessionName(), getSeminarId(),
+            getSeminarName());
+    }
 
-	default Detail<T> asDetail() {
-		return new Detail<>(getValue(), getTotal(), getCount());
-	}
+    default Detail<T> asDetail() {
+        return new Detail<>(getValue(), getTotal(), getCount());
+    }
 
-	@Value
-	final class Session {
-		private final UUID sessionId;
-		private final String sessionName;
-		private final UUID seminarId;
-		private final String seminarName;
-	}
+    @Value
+    final class Session {
 
-	class Report<T extends Comparable<T>> {
-		private final double average;
-		private final long total;
-		private final long count;
-		private final List<Detail<T>> details;
+        private final UUID sessionId;
 
-		public Report(double average, long total, long count, List<Detail<T>> details) {
-			this.average = average;
-			this.total = total;
-			this.count = count;
-			this.details = details;
-		}
+        private final String sessionName;
 
-		public double getAverage() {
-			return average;
-		}
+        private final UUID seminarId;
 
-		public long getTotal() {
-			return total;
-		}
+        private final String seminarName;
+    }
 
-		public long getCount() {
-			return count;
-		}
+    class Report<T extends Comparable<T>> {
 
-		public List<Detail<T>> getDetails() {
-			return details;
-		}
+        private final double average;
 
-		@Override
-		public String toString() {
-			return "Report{" + "average=" + average + ", total=" + total + ", count="
-					+ count + ", details=" + details + '}';
-		}
-	}
+        private final long total;
 
-	@Value
-	class SatisfactionReport extends Report<Satisfaction> {
-		private final long nsat;
+        private final long count;
 
-		public SatisfactionReport(Report<Satisfaction> report) {
-			super(report.average, report.total, report.count, report.details);
-			this.nsat = nsat(report);
-		}
+        private final List<Detail<T>> details;
 
-		/**
-		 * Returns "Net User Satisfaction". <br>
-		 * http://download.microsoft.com/download/3/2/2/32269687-F181-449A-8C72-317090403C70/Determining_Net_User_Satisfaction.docx
-		 */
-		private static long nsat(Summary.Report<Satisfaction> report) {
-			double vsat = extract(report, Satisfaction.EXCELLENT) * 100.0d
-					/ report.getCount();
-			double dsat = (extract(report, Satisfaction.BAD)
-					+ extract(report, Satisfaction.TERRIBLE)) * 100.0d
-					/ report.getCount();
-			return Math.round(vsat - dsat) + 100;
-		}
+        public Report(double average, long total, long count, List<Detail<T>> details) {
+            this.average = average;
+            this.total = total;
+            this.count = count;
+            this.details = details;
+        }
 
-		private static long extract(Summary.Report<Satisfaction> report,
-				Satisfaction satisfaction) {
-			return report.getDetails().stream().filter(d -> d.getValue() == satisfaction)
-					.mapToLong(Summary.Detail::getCount).sum();
-		}
-	}
+        public double getAverage() {
+            return average;
+        }
 
-	@Value
-	class Detail<T extends Comparable<T>> {
-		private final T value;
-		private final long total;
-		private final long count;
-	}
+        public long getTotal() {
+            return total;
+        }
+
+        public long getCount() {
+            return count;
+        }
+
+        public List<Detail<T>> getDetails() {
+            return details;
+        }
+
+        @Override
+        public String toString() {
+            return "Report{" + "average=" + average + ", total=" + total + ", count="
+                + count + ", details=" + details + '}';
+        }
+    }
+
+    class SatisfactionReport extends Report<Satisfaction> {
+
+        private final long nsat;
+
+        public SatisfactionReport(Report<Satisfaction> report) {
+            super(report.average, report.total, report.count, report.details);
+            this.nsat = nsat(report);
+        }
+
+        /**
+         * Returns "Net User Satisfaction". <br>
+         * http://download.microsoft.com/download/3/2/2/32269687-F181-449A-8C72-317090403C70/Determining_Net_User_Satisfaction.docx
+         */
+        private static long nsat(Summary.Report<Satisfaction> report) {
+            double vsat = extract(report, Satisfaction.EXCELLENT) * 100.0d
+                / report.getCount();
+            double dsat = (extract(report, Satisfaction.BAD)
+                + extract(report, Satisfaction.TERRIBLE)) * 100.0d
+                / report.getCount();
+            return Math.round(vsat - dsat) + 100;
+        }
+
+        private static long extract(Summary.Report<Satisfaction> report,
+                                    Satisfaction satisfaction) {
+            return report.getDetails().stream().filter(d -> d.getValue() == satisfaction)
+                .mapToLong(Summary.Detail::getCount).sum();
+        }
+
+        public long getNsat() {
+            return nsat;
+        }
+    }
+
+    @Value
+    class Detail<T extends Comparable<T>> {
+
+        private final T value;
+
+        private final long total;
+
+        private final long count;
+    }
 }

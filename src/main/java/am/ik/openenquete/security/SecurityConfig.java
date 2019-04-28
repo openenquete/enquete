@@ -15,7 +15,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		http.requestMatchers().antMatchers("/**").and().authorizeRequests()
 				.mvcMatchers("/v1/responses_for_*", "seminars/*", "sessions/*")
-				.permitAll().mvcMatchers("/admin", "/admin/**", "/v1/**").hasRole("ADMIN")
+				.permitAll().mvcMatchers("/admin", "/admin/**", "/v1/**", "/actuator/**").hasRole("ADMIN")
 				.antMatchers("/login**").permitAll().anyRequest().authenticated().and()
 				.csrf()
 				.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());

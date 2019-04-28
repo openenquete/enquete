@@ -48,8 +48,6 @@
     </section>
     <section>
         <h3>システムメトリクス</h3>
-        <h4>メモリ使用率</h4>
-        <div id="metrics"></div>
         <h4>HTTPセッション数</h4>
         <p style="font-size: xx-large">
             🏃 <span id="activeSession"></span>
@@ -61,50 +59,17 @@
         google.charts.load('current', {'packages': ['gauge']});
         google.charts.setOnLoadCallback(drawChart);
         function drawChart() {
-
-            var data = google.visualization.arrayToDataTable([
-                ['Label', 'Value'],
-                ['Memory', 0],
-                ['Heap (Used)', 0],
-                ['Heap (Committed)', 0]
-            ]);
-
-            var options = {
-                width: 400, height: 120,
-                redFrom: 90, redTo: 100,
-                yellowFrom: 75, yellowTo: 90,
-                minorTicks: 5
-            };
-
-            var chart = new google.visualization.Gauge(document.getElementById('metrics'));
-
-            chart.draw(data, options);
-
-            getMetrics(data, chart, options);
-
+            getMetrics();
             setInterval(function () {
-                getMetrics(data, chart, options);
+                getMetrics();
             }, 10000);
         }
 
-        function getMetrics(data, chart, options) {
-            axios.get('/metrics').then(function (res) {
-                var metrics = res.data,
-                    mem = metrics['mem'],
-                    memFree = metrics['mem.free'],
-                    heap = metrics['heap'],
-                    heapUsed = metrics['heap.used'],
-                    heapCommited = metrics['heap.committed'],
-                    activeSession = metrics['httpsessions.active'];
-                // Memory
-                data.setValue(0, 1, 100 * memFree / mem);
-                // Heap (Used)
-                data.setValue(1, 1, 100 * heapUsed / heap);
-                // Heap (Commited)
-                data.setValue(2, 1, 100 * heapCommited / heap);
-                chart.draw(data, options);
+        function getMetrics() {
+            axios.get('/actuator/metrics/tomcat.sessions.active.current').then(function (res) {
+                var metrics = res.data;
                 // Active Session
-                document.getElementById('activeSession').innerText = activeSession;
+                document.getElementById('activeSession').innerText = metrics.measurements[0].value;
             });
         }
     </script>

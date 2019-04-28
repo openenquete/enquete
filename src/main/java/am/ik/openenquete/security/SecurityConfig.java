@@ -13,18 +13,24 @@ import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-	@Override
-	public void configure(WebSecurity web) throws Exception {
-		web.ignoring().mvcMatchers("/css/**", "/js/**", "/images/**");
-	}
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring().mvcMatchers("/css/**", "/js/**", "/images/**");
+    }
 
-	@Override
-	protected void configure(HttpSecurity http) throws Exception {
-		http.requestMatchers().antMatchers("/**").and().authorizeRequests()
-				.mvcMatchers("/v1/responses_for_*", "seminars/*", "sessions/*")
-				.permitAll().mvcMatchers("/admin", "/admin/**", "/v1/**", "/actuator/**").hasRole("ADMIN")
-				.antMatchers("/login**").permitAll().anyRequest().authenticated().and()
-				.csrf()
-				.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
-	}
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http.requestMatchers().antMatchers("/**") //
+            .and() //
+            .authorizeRequests()
+            /* */.mvcMatchers("v1/responses_for_session", "v1/responses_for_seminar", "v1/coupons/**", "v1/coupon_used", "seminars/*", "sessions/*", "coupons/*", "actuator/health",
+            "actuator/info",
+            "actuator/prometheus").permitAll() //
+            /* */.mvcMatchers("/admin", "/admin/**", "/v1/**", "/actuator/**").hasRole("ADMIN") //
+            /* */.antMatchers("/login**").permitAll() //
+            /* */.anyRequest().authenticated() //
+            .and() //
+            .csrf()
+            .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
+    }
 }

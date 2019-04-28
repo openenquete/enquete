@@ -17,7 +17,7 @@
     </p>
     <p sec:authorize="anonymous">
         <a href="index.html" th:href="@{/}">GitHubでログイン</a>
-        <br />
+        <br/>
         <span style="font-size: x-small;">ログインは必須ではありません。ログインした場合は回答履歴を確認できます。匿名希望の場合はログインしないでください。</span>
     </p>
 </section>
@@ -67,6 +67,11 @@
         <div id="thanks" th:style="${'display: ' + (submitted ?'block' : 'none')}">
             回答ありがとうございました。<br/>
             <img src="../static/images/thanks.png" th:src="@{/images/thanks.png}"/>
+            <p data-th-if="${coupon != null}">
+                <strong id="coupon">🎉 Coupon Get!!</strong><br>
+                クーポンを取得しました。下記のQRCodeを次回のイベントまで保存しておいてください。<br>
+                <img th:src="|data:image/png;base64,${qrCode}|"/>
+            </p>
         </div>
     </form>
     <h3>イベント全体の感想</h3>
@@ -108,10 +113,7 @@
             submit.value = 'Sending ...';
             axios.post('/v1/responses_for_session', request)
                 .then(function (res) {
-                    document.getElementById('form').style.display = 'none';
-                    document.getElementById('thanks').style.display = 'block';
-                    form.reset();
-                    reset();
+                    window.location.reload();
                 })
                 .catch(function (e) {
                     console.error(e);

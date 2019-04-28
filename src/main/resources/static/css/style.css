@@ -60,3 +60,20 @@ textarea {
     height: 60px;
     width: 100%;
 }
+
+@keyframes blink {
+    75% {
+        opacity: 0.0;
+    }
+}
+
+@-webkit-keyframes blink {
+    75% {
+        opacity: 0.0;
+    }
+}
+
+#coupon {
+    animation: blink 1s step-end infinite;
+    -webkit-animation: blink 1s step-end infinite;
+}

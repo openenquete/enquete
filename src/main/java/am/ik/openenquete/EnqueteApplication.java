@@ -35,7 +35,6 @@ import am.ik.openenquete.session.Session;
 
 @SpringBootApplication
 @EntityScan(basePackageClasses = { EnqueteApplication.class, Jsr310JpaConverters.class })
-@EnableCaching
 public class EnqueteApplication {
 
 	public static void main(String[] args) {

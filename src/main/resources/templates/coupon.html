@@ -1,0 +1,68 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>クーポン</title>
+    <link rel="shortcut icon" th:href="@{/images/favicon.ico}" href="../static/images/favicon.ico"/>
+    <link rel="stylesheet" th:href="@{/css/style.css}" href="../static/css/style.css"/>
+    <link rel="stylesheet" th:href="@{/css/theme.css}" href="../static/css/theme.css"/>
+</head>
+<body>
+<section>
+    <h2>[[${coupon.seminar.seminarName}]]のクーポン</h2>
+    <form onsubmit="send(this);return false;" data-th-if="${coupon.couponUsed == null}">
+        <div>
+            <input type="hidden" name="couponId" th:value="${couponId}"/>
+            <input type="submit" name="submit" value="使用する" style="width: 100%;height: 360px;font-size: xx-large;"/>
+        </div>
+    </form>
+    <div data-th-if="${coupon.couponUsed != null}">
+        <p style="font-size: xx-large;">
+            ✅ 使用済みクーポンです。
+        </p>
+    </div>
+    <div sec:authorize="authenticated">
+        <hr/>
+        <a th:href="@{/}" href="index.html" th:text="${@enqueteProps.applicationName}">🏠 アンケート</a>
+    </div>
+    <script src="../static/js/axios.min.js" th:src="@{/js/axios.min.js}"></script>
+    <script src="../static/js/utils.js" th:src="@{/js/utils.js}"></script>
+    <script>
+        function send(form) {
+            var request = {
+                    coupon: {
+                        couponId: form.couponId.value
+                    }
+                },
+                submit = form.submit,
+                message = submit.value,
+                reset = function () {
+                    forEach(form.querySelectorAll('input,textarea'),
+                        function (x) {
+                            x.disabled = false;
+                        });
+                    submit.disabled = false;
+                    submit.value = message;
+                };
+            forEach(form.querySelectorAll('input,textarea'),
+                function (x) {
+                    x.disabled = true;
+                });
+            submit.value = 'Sending ...';
+            axios.post('/v1/coupon_used', request)
+                .then(function (res) {
+                    window.location.reload();
+                })
+                .catch(function (e) {
+                    console.error(e);
+                    alert(JSON.stringify(e.response.data));
+                    reset();
+                });
+            return false;
+        }
+    </script>
+</section>
+</body>
+</html>

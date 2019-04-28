@@ -77,10 +77,10 @@
         </form>
         <h3>セッション毎の感想</h3>
         <ul>
-            <li th:each="session : ${seminar.sessions}"><a
-                    th:href="@{/sessions/{sessionId}(sessionId=${session.sessionId})}"
-                    href="session.html"><span th:text="${session.sessionName}">キーノート</span> <span
-                    th:text="${session.speakerDisplayNames}">スピーカー</span></a></li>
+            <li th:each="s : ${seminar.sessions}"><a
+                    th:href="@{/sessions/{sessionId}(sessionId=${s.sessionId})}"
+                    href="session.html"><span th:text="${s.sessionName}">キーノート</span> <span
+                    th:text="${s.speakerDisplayNames}">スピーカー</span></a></li>
         </ul>
     </div>
     <div sec:authorize="authenticated">

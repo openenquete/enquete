@@ -29,10 +29,10 @@
 <section th:unless="${#lists.isEmpty(sessions)}">
     <h3>登壇セッションのアンケート結果</h3>
     <ul>
-        <li th:each="session : ${sessions}"><a
-                th:href="@{/speaker/sessions/{sessionId}(sessionId=${session.sessionId})}"
-                href="session.html"><span th:text="${session.sessionName}">キーノート</span> <span
-                th:text="${session.speakerDisplayNames}">スピーカー</span></a></li>
+        <li th:each="s : ${sessions}"><a
+                th:href="@{/speaker/sessions/{sessionId}(sessionId=${s.sessionId})}"
+                href="session.html"><span th:text="${s.sessionName}">キーノート</span> <span
+                th:text="${s.speakerDisplayNames}">スピーカー</span></a></li>
     </ul>
 </section>
 <div sec:authorize="hasRole('ADMIN')">

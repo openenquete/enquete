@@ -5,6 +5,7 @@ import static java.util.Arrays.asList;
 import java.time.LocalDate;
 import java.util.List;
 
+import io.micrometer.core.instrument.config.MeterFilter;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -114,5 +115,13 @@ public class EnqueteApplication {
 			validatingListener.addValidator("beforeSave", validator);
 		}
 
+	}
+
+	@Bean
+	public MeterFilter meterFilter() {
+		return MeterFilter.deny(id -> {
+			String uri = id.getTag("uri");
+			return uri != null && (uri.startsWith("/actuator") || uri.startsWith("/cloudfoundryapplication"));
+		});
 	}
 }

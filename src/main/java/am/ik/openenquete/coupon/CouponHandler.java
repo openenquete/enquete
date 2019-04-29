@@ -6,6 +6,7 @@ import am.ik.openenquete.seminar.Seminar;
 import am.ik.openenquete.session.ResponseForSession;
 import am.ik.openenquete.session.Session;
 import am.ik.openenquete.session.SessionRepository;
+import io.micrometer.core.instrument.MeterRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.rest.core.annotation.HandleAfterCreate;
@@ -26,10 +27,13 @@ public class CouponHandler {
 
     private final EnqueteProps props;
 
-    public CouponHandler(CouponRepository couponRepository, SessionRepository sessionRepository, EnqueteProps props) {
+    private final MeterRegistry meterRegistry;
+
+    public CouponHandler(CouponRepository couponRepository, SessionRepository sessionRepository, EnqueteProps props, MeterRegistry meterRegistry) {
         this.couponRepository = couponRepository;
         this.sessionRepository = sessionRepository;
         this.props = props;
+        this.meterRegistry = meterRegistry;
     }
 
     @HandleAfterCreate
@@ -63,6 +67,7 @@ public class CouponHandler {
         Coupon coupon = new Coupon(seminar, username);
         log.info("Create a coupon for {}", username);
         this.couponRepository.save(coupon);
+        this.meterRegistry.counter("coupon_created", "seminar_id", seminar.getSeminarId().toString()).increment();
     }
 
 }

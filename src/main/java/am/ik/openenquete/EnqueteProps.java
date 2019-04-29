@@ -1,6 +1,8 @@
 package am.ik.openenquete;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 
 import javax.validation.constraints.Min;
@@ -20,7 +22,13 @@ public class EnqueteProps {
 
     private QrCode qrCode = new QrCode();
 
+    private AdminClient adminClient = new AdminClient();
+
     private boolean coupon = false;
+
+    public AdminClient getAdminClient() {
+        return adminClient;
+    }
 
     public Set<String> getAdminUsers() {
         return this.adminUsers;
@@ -44,6 +52,10 @@ public class EnqueteProps {
 
     public boolean isCoupon() {
         return coupon;
+    }
+
+    public void setAdminClient(AdminClient adminClient) {
+        this.adminClient = adminClient;
     }
 
     public void setAdminUsers(Set<String> adminUsers) {
@@ -81,6 +93,34 @@ public class EnqueteProps {
 
         public void setAccessToken(String accessToken) {
             this.accessToken = accessToken;
+        }
+    }
+
+    public static class AdminClient {
+
+        private String clientId;
+
+        private String clientSecret;
+
+        public String getClientId() {
+            return clientId;
+        }
+
+        public void setClientId(String clientId) {
+            this.clientId = clientId;
+        }
+
+        public String getClientSecret() {
+            return clientSecret;
+        }
+
+        public void setClientSecret(String clientSecret) {
+            this.clientSecret = clientSecret;
+        }
+
+        public User asUser() {
+            User user = new User(this.clientId, "{noop}" + this.clientSecret, AuthorityUtils.createAuthorityList("ROLE_ADMIN_CLIENT"));
+            return user;
         }
     }
 

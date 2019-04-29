@@ -20,7 +20,12 @@
     </form>
     <div data-th-if="${coupon.couponUsed != null}">
         <p style="font-size: xx-large;">
-            ✅ 使用済みクーポンです。
+            ❌ [[${coupon.couponUsed.createdAt}]]に使用済みのクーポンです。
+        </p>
+    </div>
+    <div id="used" style="display: none">
+        <p style="font-size: xx-large;">
+            ✅ クーポンを使用しました。
         </p>
     </div>
     <div sec:authorize="authenticated">
@@ -53,7 +58,8 @@
             submit.value = 'Sending ...';
             axios.post('/v1/coupon_used', request)
                 .then(function (res) {
-                    window.location.reload();
+                    form.style.display = 'none';
+                    document.getElementById('used').style.display = 'block';
                 })
                 .catch(function (e) {
                     console.error(e);

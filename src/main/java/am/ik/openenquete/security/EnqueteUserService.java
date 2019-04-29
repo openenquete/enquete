@@ -34,7 +34,6 @@ public class EnqueteUserService implements OAuth2UserService<OAuth2UserRequest, 
             Objects.toString(attributes.get("email")),
             Objects.toString(attributes.get("avatar_url")),
             authorities);
-        System.out.println("gen " + enqueteUser);
         return enqueteUser;
     }
 }

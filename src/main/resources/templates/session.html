@@ -124,14 +124,5 @@
         }
     </script>
 </section>
-<section>
-    <h3>短縮URL / QRコード</h3>
-    <p style="font-size: x-large" th:if="${shortenUrl}">
-        <a th:text="${shortenUrl}" th:href="${shortenUrl}" href="http://bit.ly/2i5a6BG">http://bit.ly/2i5a6BG</a>
-    </p>
-    <p th:if="${qrCode}">
-        <img th:src="|data:image/png;base64,${qrCode}|"/>
-    </p>
-</section>
 </body>
 </html>

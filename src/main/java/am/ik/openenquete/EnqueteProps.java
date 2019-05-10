@@ -26,6 +26,8 @@ public class EnqueteProps {
 
     private boolean coupon = false;
 
+    private String responseForSessionWebhookUrl;
+
     public AdminClient getAdminClient() {
         return adminClient;
     }
@@ -48,6 +50,10 @@ public class EnqueteProps {
 
     public QrCode getQrCode() {
         return this.qrCode;
+    }
+
+    public String getResponseForSessionWebhookUrl() {
+        return responseForSessionWebhookUrl;
     }
 
     public boolean isCoupon() {
@@ -80,6 +86,10 @@ public class EnqueteProps {
 
     public void setQrCode(QrCode qrCode) {
         this.qrCode = qrCode;
+    }
+
+    public void setResponseForSessionWebhookUrl(String responseForSessionWebhookUrl) {
+        this.responseForSessionWebhookUrl = responseForSessionWebhookUrl;
     }
 
     public static class Bitly {

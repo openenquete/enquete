@@ -32,6 +32,9 @@ public interface ResponseForSessionRepository
 
 	ResponseForSession save(ResponseForSession responseForSession);
 
+	@RestResource(exported = false)
+	void deleteBySession_Seminar_SeminarId(@Param("seminarId") UUID seminarId);
+
 	@Query("SELECT s.sessionId AS sessionId, s.sessionName AS sessionName, x.satisfaction AS value, COUNT(x.satisfaction) AS count, COUNT(x.satisfaction) * x.satisfaction AS total, x.session.seminar.seminarId AS seminarId FROM ResponseForSession x JOIN x.session s GROUP BY s.sessionId, x.satisfaction HAVING x.session.seminar.seminarId = :seminarId")
 	List<Summary<Satisfaction>> reportBySatisfaction(@Param("seminarId") UUID seminarId);
 

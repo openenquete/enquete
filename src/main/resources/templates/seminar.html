@@ -29,6 +29,10 @@
             <input type="hidden" name="seminarId" th:value="${seminarId}"/>
             <input type="submit" name="submit" value="Close"/>
         </form>
+        <form id="resetForm" onsubmit="return resetSeminar(event);">
+            <input type="hidden" name="seminarId" th:value="${seminarId}"/>
+            <input type="submit" name="submit" value="🚨 Reset"/>
+        </form>
     </div>
     <div th:unless="${seminar.open}">
         <form id="reopenForm" onsubmit="return reopenSeminar(event);">
@@ -145,7 +149,7 @@
                 submit = form.submit,
                 message = submit.value,
                 reset = function () {
-                    forEach(form.querySelectorAll('input,textarea'),
+                    forEach(document.querySelectorAll('input,textarea'),
                         function (x) {
                             x.disabled = false;
                         });
@@ -153,7 +157,7 @@
                     submit.value = message;
                 };
 
-            forEach(form.querySelectorAll('input,textarea'),
+            forEach(document.querySelectorAll('input,textarea'),
                 function (x) {
                     x.disabled = true;
                 });
@@ -191,6 +195,41 @@
                 });
             submit.value = 'Reopening ...';
             axios.delete('/v1/seminar_closed/' + closedId)
+                .then(function (res) {
+                    window.location.reload();
+                })
+                .catch(function (e) {
+                    console.error(e);
+                    alert(JSON.stringify(e.response.data));
+                    reset();
+                });
+            return false;
+        }
+
+        function resetSeminar(event) {
+            event.preventDefault();
+            if (!confirm("Resetして良いですか？")) {
+                return false;
+            }
+            var form = event.target,
+                seminarId = form.seminarId.value,
+                submit = form.submit,
+                message = submit.value,
+                reset = function () {
+                    forEach(document.querySelectorAll('input,textarea'),
+                        function (x) {
+                            x.disabled = false;
+                        });
+                    submit.disabled = false;
+                    submit.value = message;
+                };
+
+            forEach(document.querySelectorAll('input,textarea'),
+                function (x) {
+                    x.disabled = true;
+                });
+            submit.value = 'Resetting ...';
+            axios.delete('/v1/seminars/' + seminarId + '/responses')
                 .then(function (res) {
                     window.location.reload();
                 })

@@ -21,4 +21,7 @@ public interface ResponseForSeminarRepository
 			@Param("seminarId") UUID seminarId, @Param("username") String username);
 
 	ResponseForSeminar save(ResponseForSeminar responseForSeminar);
+
+	@RestResource(exported = false)
+	void deleteBySeminar_SeminarId(@Param("seminarId") UUID seminarId);
 }

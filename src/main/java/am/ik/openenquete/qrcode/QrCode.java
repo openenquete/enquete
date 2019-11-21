@@ -4,6 +4,7 @@ import am.ik.openenquete.EnqueteProps;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.WriterException;
+import com.google.zxing.client.j2se.MatrixToImageConfig;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
@@ -29,8 +30,11 @@ public class QrCode {
 
     private final EnqueteProps props;
 
+    private final MatrixToImageConfig config;
+
     public QrCode(EnqueteProps props) {
         this.props = props;
+        this.config = new MatrixToImageConfig(props.getQrCode().color(), 0xFFFFFFFF);
     }
 
     public String dataUrl(String url) {
@@ -38,7 +42,7 @@ public class QrCode {
         try (ByteArrayOutputStream output = new ByteArrayOutputStream()) {
             BitMatrix bitMatrix = writer.encode(url, BarcodeFormat.QR_CODE, size, size,
                 hints);
-            MatrixToImageWriter.writeToStream(bitMatrix, "png", output);
+            MatrixToImageWriter.writeToStream(bitMatrix, "png", output, this.config);
             return Base64.getEncoder().encodeToString(output.toByteArray());
         } catch (WriterException e) {
             log.warn("WriterException", e);

@@ -5,6 +5,7 @@ import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 
+import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import java.util.Set;
 
@@ -154,6 +155,18 @@ public class EnqueteProps {
         @Min(32)
         private int size = 240;
 
+        @Min(0)
+        @Max(255)
+        private int red = 0;
+
+        @Min(0)
+        @Max(255)
+        private int blue = 0;
+
+        @Min(0)
+        @Max(255)
+        private int green = 0;
+
         public int getSize() {
             return this.size;
         }
@@ -176,6 +189,34 @@ public class EnqueteProps {
 
         public void setSize(int size) {
             this.size = size;
+        }
+
+        public int getRed() {
+            return red;
+        }
+
+        public void setRed(int red) {
+            this.red = red;
+        }
+
+        public int getBlue() {
+            return blue;
+        }
+
+        public void setBlue(int blue) {
+            this.blue = blue;
+        }
+
+        public int getGreen() {
+            return green;
+        }
+
+        public void setGreen(int green) {
+            this.green = green;
+        }
+
+        public int color() {
+            return 0xFF << 24 | this.red << 16 | this.green << 8 | this.blue;
         }
     }
 }
